@@ -18,6 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
+  --gold:#C08F00; --gold-soft:#FFF1BF;
   --bg:#EDF1F4; --surface:#FFFFFF; --ink:#13203A; --muted:#5D6B80; --line:#D5DCE4;
   --run:#E8590C; --run-soft:#FDE6D8; --renfo:#0F8F7E; --renfo-soft:#DDF3EF; --rest:#9AA6B6;
   --done:#13203A;
@@ -28,13 +29,13 @@
   :root:not([data-theme="light"]){
     color-scheme:dark;
     --bg:#0F1624; --surface:#18223A; --ink:#E8EDF5; --muted:#93A0B5; --line:#2A3650;
-    --run:#FF8A4C; --run-soft:#4A2A1C; --renfo:#3CC7B2; --renfo-soft:#163D3B; --rest:#5E6A7E; --done:#E8EDF5;
+    --run:#FF8A4C; --run-soft:#4A2A1C; --renfo:#3CC7B2; --renfo-soft:#163D3B; --rest:#5E6A7E; --done:#E8EDF5; --gold:#F2C94C; --gold-soft:#3B3214;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#0F1624; --surface:#18223A; --ink:#E8EDF5; --muted:#93A0B5; --line:#2A3650;
-  --run:#FF8A4C; --run-soft:#4A2A1C; --renfo:#3CC7B2; --renfo-soft:#163D3B; --rest:#5E6A7E; --done:#E8EDF5;
+  --run:#FF8A4C; --run-soft:#4A2A1C; --renfo:#3CC7B2; --renfo-soft:#163D3B; --rest:#5E6A7E; --done:#E8EDF5; --gold:#F2C94C; --gold-soft:#3B3214;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -121,6 +122,11 @@ textarea{min-height:70px;resize:vertical}
 .dot.ok{background:var(--c)}
 .dot.miss{opacity:.4}
 .dot svg{width:9px;height:9px}
+.cell.perfect{background:var(--gold-soft);border-color:var(--gold)}
+.star{color:var(--gold);font-size:.85rem;line-height:1;margin-top:auto}
+.week.gold{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.gold-txt b{color:var(--gold)}
+.legend .star-l{color:var(--gold);font-size:1rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -230,14 +236,14 @@ function render(){
     const kmDone=all.filter(s=>s.type==="run"&&s.done).reduce((a,s)=>a+(+s.km||0),0);
     const f=n=>(Math.round(n*10)/10).toString().replace(".",",");
     const st=el("div",{class:"stats"});
-    st.innerHTML=`<span><b>${done}/${all.length}</b> séances faites</span><span><b>${f(kmDone)}</b> / ${f(kmPlan)} km</span>`;
+    st.innerHTML=`${done===all.length?'<span class="gold-txt"><b>★ Semaine parfaite</b></span>':`<span><b>${done}/${all.length}</b> séances faites</span>`}<span><b>${f(kmDone)}</b> / ${f(kmPlan)} km</span>`;
     summary.append(track,st);
   }else if(mode==="tpl"){
     summary.append(el("p",{class:"note"},"Les changements ici s’appliquent aux semaines que tu n’as pas encore ouvertes. Pour une semaine déjà créée, utilise « Repartir de la semaine type »."));
   }
 
   // Jours
-  const wrap=document.getElementById("days");wrap.replaceChildren();wrap.className="week";
+  const wrap=document.getElementById("days");wrap.replaceChildren();wrap.className="week"+(mode==="week"&&all.length&&all.every(s=>s.done)?" gold":"");
   const todayKey=keyOf(new Date());
   days.forEach((list,i)=>{
     const d=new Date(mon);d.setDate(mon.getDate()+i);
@@ -308,6 +314,7 @@ function updateTabs(){
 }
 const MONTHS_FULL=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 function sessionsOn(d){const w=state.weeks[keyOf(mondayOf(d))];return (w||state.template)[(d.getDay()+6)%7].map(s=>w?s:{...s,done:false})}
+function isPerfect(d){const w=state.weeks[keyOf(mondayOf(d))];if(!w)return false;const a=w.flat();return a.length>0&&a.every(s=>s.done)}
 function renderMonth(){
   const now=new Date();
   const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
@@ -326,7 +333,7 @@ function renderMonth(){
   const st=el("div",{class:"stats"});
   st.innerHTML=`<span><b>${done}/${total}</b> séances faites</span><span><b>${(Math.round(km*10)/10).toString().replace(".",",")}</b> km courus</span>`;
   const lg=el("div",{class:"legend"});
-  lg.innerHTML=`<span><i class="dot run ok"></i>Course faite</span><span><i class="dot renfo ok"></i>Renfo fait</span><span><i class="dot run"></i>Prévue</span><span><i class="dot run miss"></i>Manquée</span>`;
+  lg.innerHTML=`<span><i class="dot run ok"></i>Course faite</span><span><i class="dot renfo ok"></i>Renfo fait</span><span><i class="dot run"></i>Prévue</span><span><i class="dot run miss"></i>Manquée</span><span><span class="star-l">★</span>Semaine parfaite</span>`;
   summary.append(st,lg);
 
   const grid=el("div",{class:"cal"});
@@ -339,13 +346,15 @@ function renderMonth(){
     const list=sessionsOn(day);
     const past=day<today;
     const isToday=day.getTime()===today.getTime();
+    const perfect=isPerfect(day);
     const nd=list.filter(s=>s.done).length;
     const label=day.getDate()+" "+MONTHS_FULL[day.getMonth()]+" : "+(list.length?nd+" séance"+(list.length>1?"s":"")+" faite"+(nd>1?"s":"")+" sur "+list.length:"repos");
-    const cell=el("button",{class:"cell"+(day.getMonth()!==m?" out":"")+(isToday?" today":""),"aria-label":label,onclick:()=>{weekOffset=Math.round((mondayOf(day)-thisMon)/(7*864e5));mode="week";render();window.scrollTo(0,0)}});
+    const cell=el("button",{class:"cell"+(day.getMonth()!==m?" out":"")+(isToday?" today":"")+(perfect?" perfect":""),"aria-label":label+(perfect?", semaine parfaite":""),onclick:()=>{weekOffset=Math.round((mondayOf(day)-thisMon)/(7*864e5));mode="week";render();window.scrollTo(0,0)}});
     cell.append(el("span",{class:"n"},String(day.getDate())));
     const dots=el("span",{class:"dots","aria-hidden":"true"});
     list.forEach(s=>{const dot=el("i",{class:"dot "+s.type+(s.done?" ok":past?" miss":""),title:s.title});if(s.done)dot.innerHTML=CHECK;dots.append(dot)});
     cell.append(dots);
+    if(perfect&&day.getDay()===0)cell.append(el("span",{class:"star","aria-hidden":"true"},"★"));
     grid.append(cell);
   }
   const daysEl=document.getElementById("days");daysEl.className="";daysEl.replaceChildren(grid);
