@@ -145,6 +145,10 @@ textarea{min-height:70px;resize:vertical}
 .dot svg{width:9px;height:9px}
 .cell.perfect{background:var(--gold-soft);border-color:var(--gold)}
 .star{color:var(--gold);font-size:.9rem;line-height:1;margin-top:auto}
+[hidden]{display:none!important}
+.settings{display:flex;justify-content:center;margin-top:18px}
+.gear{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--rest);font-size:.82rem;font-weight:500;padding:8px 10px;border-radius:20px}
+.gear:active{background:var(--line)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -160,6 +164,7 @@ textarea{min-height:70px;resize:vertical}
       <button class="icon-btn" id="prev" aria-label="Semaine précédente">‹</button>
       <button class="icon-btn" id="next" aria-label="Semaine suivante">›</button>
     </div>
+    <button class="icon-btn" id="closeTpl" aria-label="Fermer la semaine type" hidden>✕</button>
   </header>
   <div id="summary"></div>
   </div>
@@ -167,11 +172,11 @@ textarea{min-height:70px;resize:vertical}
   <div class="tabs" role="group" aria-label="Affichage">
     <button id="tabWeek" aria-pressed="true">Ma semaine</button>
     <button id="tabMonth" aria-pressed="false">Mois</button>
-    <button id="tabTpl" aria-pressed="false">Semaine type</button>
   </div>
 
   <div id="days"></div>
   <div id="footer"></div>
+  <div class="settings"><button class="gear" id="gear"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Semaine type</span></button></div>
 </div>
 <div class="save-state" id="saveState">Enregistré</div>
 
@@ -328,8 +333,12 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
 function updateTabs(){
   document.getElementById("tabWeek").setAttribute("aria-pressed",mode==="week");
   document.getElementById("tabMonth").setAttribute("aria-pressed",mode==="month");
-  document.getElementById("tabTpl").setAttribute("aria-pressed",mode==="tpl");
-  document.getElementById("nav").style.visibility=mode==="tpl"?"hidden":"visible";
+  const tpl=mode==="tpl";
+  document.querySelector(".tabs").hidden=tpl;
+  document.getElementById("nav").hidden=tpl;
+  document.getElementById("closeTpl").hidden=!tpl;
+  document.querySelector(".settings").hidden=tpl;
+  document.querySelector(".tabs").nextElementSibling.style.marginTop=tpl?"14px":"";
   document.getElementById("prev").setAttribute("aria-label",mode==="month"?"Mois précédent":"Semaine précédente");
   document.getElementById("next").setAttribute("aria-label",mode==="month"?"Mois suivant":"Semaine suivante");
 }
@@ -386,7 +395,9 @@ document.getElementById("prev").onclick=()=>{if(mode==="month")monthOffset--;els
 document.getElementById("next").onclick=()=>{if(mode==="month")monthOffset++;else weekOffset++;render()};
 document.getElementById("tabWeek").onclick=()=>{mode="week";render()};
 document.getElementById("tabMonth").onclick=()=>{mode="month";render()};
-document.getElementById("tabTpl").onclick=()=>{mode="tpl";render()};
+let backMode="week";
+document.getElementById("gear").onclick=()=>{backMode=mode;mode="tpl";render();window.scrollTo(0,0)};
+document.getElementById("closeTpl").onclick=()=>{mode=backMode;render();window.scrollTo(0,0)};
 
 // Sauvegarde : base de données de l’artifact si disponible, sinon ce navigateur
 const LS="planning-course-v1";
