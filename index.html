@@ -172,6 +172,16 @@ textarea{min-height:70px;resize:vertical}
 @keyframes slidePrev{from{transform:translateX(-28px);opacity:.3}to{transform:none;opacity:1}}
 .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header>div:first-child{min-width:0}
+.track.month.perfect span i{background:var(--hero-gold);width:100%!important}
+.month-win{position:fixed;inset:0;z-index:55;display:grid;place-items:center;background:rgba(8,13,25,.55);animation:mwIn .3s ease-out;padding:24px}
+.month-win.out{opacity:0;transition:opacity .35s}
+.mw-card{background:var(--hero);color:var(--hero-ink);border:2px solid var(--hero-gold);border-radius:24px;padding:26px 28px 24px;text-align:center;max-width:300px;animation:mwPop .55s cubic-bezier(.2,1.4,.4,1)}
+.mw-medal{color:var(--hero-gold);display:grid;place-items:center;margin-bottom:8px;animation:mwSpin 1s ease-out}
+.mw-title{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:2.4rem;line-height:1;color:var(--hero-gold)}
+.mw-sub{color:var(--hero-muted);margin-top:8px;font-size:.95rem}
+@keyframes mwIn{from{opacity:0}to{opacity:1}}
+@keyframes mwPop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes mwSpin{from{transform:rotateY(540deg) scale(.5)}to{transform:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -312,7 +322,7 @@ function render(){
     list.forEach(s=>{
       const row=el("div",{class:"sess"+(s.done&&mode==="week"?" done":"")+(s.id===lastToggled?" just":""),"data-type":s.type});
       if(mode==="week"){
-        const c=el("button",{class:"check","aria-label":(s.done?"Marquer non faite : ":"Marquer faite : ")+s.title,"aria-pressed":s.done,onclick:()=>{const wk=weekDays().flat();const was=wk.every(x=>x.done);s.done=!s.done;lastToggled=s.id;render();lastToggled=null;queueSave(true);if(!was&&wk.every(x=>x.done))celebrate()}});
+        const c=el("button",{class:"check","aria-label":(s.done?"Marquer non faite : ":"Marquer faite : ")+s.title,"aria-pressed":s.done,onclick:()=>{const wk=weekDays().flat();const was=wk.every(x=>x.done);const wasM=isMonthPerfect(d.getFullYear(),d.getMonth());s.done=!s.done;lastToggled=s.id;render();lastToggled=null;queueSave(true);if(!wasM&&isMonthPerfect(d.getFullYear(),d.getMonth()))celebrateMonth(d);else if(!was&&wk.every(x=>x.done))celebrate()}});
         c.innerHTML=CHECK;row.append(c);
       }
       row.append(el("div",{class:"body"},el("span",{class:"title"},s.title||(s.type==="run"?"Course":"Renforcement")),el("span",{class:"meta"},fmtMeta(s))));
@@ -413,10 +423,11 @@ function renderMonth(){
   }
   const summary=document.getElementById("summary");summary.replaceChildren();
   const st=el("div",{class:"stats"});
-  st.innerHTML=`<span><b>${done}/${total}</b> séances faites</span><span><b>${(Math.round(km*10)/10).toString().replace(".",",")}</b> km courus</span>`;
+  const mp=total>0&&done===total;
+  st.innerHTML=`${mp?'<span class="gold-txt"><b>★ Mois parfait</b></span>':`<span><b>${done}/${total}</b> séances faites</span>`}<span><b>${(Math.round(km*10)/10).toString().replace(".",",")}</b> km courus</span>`;
   const lg=el("div",{class:"legend"});
   lg.innerHTML=`<span><i class="dot run ok"></i>Course faite</span><span><i class="dot renfo ok"></i>Renfo fait</span><span><i class="dot run"></i>Prévue</span><span><i class="dot run miss"></i>Manquée</span><span><span class="star-l">★</span>Semaine parfaite</span>`;
-  const mt=el("div",{class:"track month","aria-hidden":"true"});
+  const mt=el("div",{class:"track month"+(mp?" perfect":""),"aria-hidden":"true"});
   for(let w=mondayOf(first);w<=last;w.setDate(w.getDate()+7)){
     let a=0,b=0;
     for(let i=0;i<7;i++){const d=new Date(w);d.setDate(w.getDate()+i);if(d.getMonth()!==m)continue;sessionsOn(d).forEach(s=>{b++;if(s.done)a++})}
@@ -477,6 +488,40 @@ function streak(){
   if(!isPerfect(d))d.setDate(d.getDate()-7);
   let n=0;while(isPerfect(d)){n++;d.setDate(d.getDate()-7)}
   return n;
+}
+function isMonthPerfect(y,m){
+  let t=0;
+  for(let d=new Date(y,m,1);d.getMonth()===m;d.setDate(d.getDate()+1)){
+    for(const s of sessionsOn(d)){t++;if(!s.done)return false}
+  }
+  return t>0;
+}
+function burst(cv,origins,count,dur,cols){
+  const dpr=devicePixelRatio||1,W=innerWidth,H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
+  const ps=[];origins.forEach(o=>{for(let i=0;i<count;i++){const a=o.angle+(Math.random()-.5)*o.spread,v=Math.random()*o.power+o.power*.5;
+    ps.push({x:o.x*W,y:o.y*H,vx:Math.cos(a)*v,vy:Math.sin(a)*v,s:Math.random()*7+5,r:Math.random()*6,vr:(Math.random()-.5)*.35,c:cols[i%cols.length],round:Math.random()<.35,delay:o.delay||0})}});
+  const t0=performance.now();
+  return new Promise(res=>{(function f(t){const el_=t-t0,k=el_/dur;ctx.clearRect(0,0,W,H);
+    ps.forEach(p=>{if(el_<p.delay)return;p.vy+=.25;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+      ctx.save();ctx.globalAlpha=Math.max(0,1-k*k*k);ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;
+      if(p.round){ctx.beginPath();ctx.arc(0,0,p.s/2.4,0,7);ctx.fill()}else ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore()});
+    if(k<1)requestAnimationFrame(f);else res()})(t0)});
+}
+function celebrateMonth(d){
+  const cs=getComputedStyle(document.documentElement);
+  const gold=cs.getPropertyValue("--hero-gold").trim();
+  const cols=[gold,gold,cs.getPropertyValue("--run").trim(),cs.getPropertyValue("--renfo").trim(),"#FFFFFF"];
+  const name=MONTHS_FULL[d.getMonth()];
+  const ov=el("div",{class:"month-win",role:"status"});
+  ov.innerHTML=`<div class="mw-card"><div class="mw-medal" aria-hidden="true"><svg viewBox="0 0 64 64" width="64" height="64"><path d="M22 4h8l4 14h-8zM42 4h-8l-4 14h8z" fill="currentColor" opacity=".55"/><circle cx="32" cy="38" r="20" fill="currentColor"/><path d="M32 27l3.4 6.9 7.6 1.1-5.5 5.4 1.3 7.6L32 44.4 25.2 48l1.3-7.6-5.5-5.4 7.6-1.1z" fill="var(--hero)"/></svg></div><div class="mw-title">Mois parfait</div><div class="mw-sub">Toutes tes séances de ${name} sont faites. Bravo !</div></div>`;
+  ov.addEventListener("click",()=>close());
+  document.body.append(ov);
+  let closed=false;function close(){if(closed)return;closed=true;ov.classList.add("out");setTimeout(()=>ov.remove(),350)}
+  setTimeout(close,3600);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const cv=document.createElement("canvas");cv.className="confetti";document.body.append(cv);
+  burst(cv,[{x:0,y:1,angle:-1.1,spread:.6,power:17},{x:1,y:1,angle:-2.04,spread:.6,power:17},{x:.5,y:.38,angle:-Math.PI/2,spread:6.2,power:8,delay:350}],80,2800,cols).then(()=>cv.remove());
 }
 function celebrate(){
   setTimeout(()=>toast("★ Semaine parfaite !"),700);
