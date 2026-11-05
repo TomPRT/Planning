@@ -70,11 +70,12 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:12p
 .note{color:var(--hero-muted);font-size:.92rem;margin:0}
 
 /* Onglets */
-.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;margin:14px 0 12px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-.tab-ind{position:absolute;view-transition-name:tab-ind;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);border-radius:10px;background:var(--hero);transition:transform .28s cubic-bezier(.3,.7,.3,1)}
+.tabs{position:relative;display:grid;grid-template-columns:repeat(4,1fr);margin:14px 0 12px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.tab-ind{position:absolute;view-transition-name:tab-ind;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/4);border-radius:10px;background:var(--hero);transition:transform .28s cubic-bezier(.3,.7,.3,1)}
 .tabs[data-active="month"] .tab-ind{transform:translateX(100%)}
-.tabs[data-active="badges"] .tab-ind{transform:translateX(200%)}
-.tabs button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:none;padding:9px 4px;border-radius:10px;font-weight:600;font-size:.92rem;white-space:nowrap;color:var(--muted);transition:color .2s}
+.tabs[data-active="stats"] .tab-ind{transform:translateX(200%)}
+.tabs[data-active="badges"] .tab-ind{transform:translateX(300%)}
+.tabs button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border:0;background:none;padding:7px 2px 6px;border-radius:10px;font-weight:600;font-size:.76rem;white-space:nowrap;color:var(--muted);transition:color .2s}
 .tabs button[aria-pressed="true"]{color:var(--hero-ink)}
 .tabs button[aria-pressed="false"]:active{color:var(--ink)}
 
@@ -210,7 +211,7 @@ header>div:first-child{min-width:0}
 .wrap{touch-action:pan-y}
 #pane{view-transition-name:content;will-change:transform}
 header>div:first-child{view-transition-name:hero-text;flex:1}
-#tabWeek{view-transition-name:tab-w}#tabMonth{view-transition-name:tab-m}#tabBadges{view-transition-name:tab-b}
+#tabWeek{view-transition-name:tab-w}#tabMonth{view-transition-name:tab-m}#tabBadges{view-transition-name:tab-b}#tabStats{view-transition-name:tab-s}
 ::view-transition-old(hero-text),::view-transition-new(hero-text){width:100%;height:auto;object-fit:none;object-position:left top}
 #summary{view-transition-name:hero-sum}
 ::view-transition-group(*){animation-duration:.36s;animation-timing-function:cubic-bezier(.25,.85,.25,1)}
@@ -263,6 +264,55 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
 .badge .medal{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i,0)*45ms + .1s)}
 @keyframes grow{from{transform:scaleX(0)}}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}}
+/* Jour de la séance */
+.field-l{font-size:.88rem;font-weight:500;color:var(--muted);margin-bottom:6px}
+.daypick{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:14px}
+.daypick button{border:1.5px solid var(--line-strong);background:none;border-radius:10px;padding:9px 0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.05rem;color:var(--muted);transition:transform .15s,background-color .2s,color .2s,border-color .2s}
+.daypick button[aria-pressed="true"]{background:var(--hero);border-color:var(--hero);color:var(--hero-ink)}
+.daypick button:active{transform:scale(.92)}
+
+/* Objectif */
+.goal{position:relative;display:flex;align-items:center;gap:12px;width:100%;margin:12px 0 0;padding:11px 14px 15px;border:1px solid var(--line);border-radius:16px;background:var(--surface);text-align:left;overflow:hidden;transition:transform .15s}
+.goal:active{transform:scale(.98)}
+.g-ico{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--run-soft);color:var(--run)}
+.g-txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.g-txt b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-txt small{color:var(--muted);font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-big{flex:none;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.8rem;line-height:1;color:var(--run)}
+.g-bar{position:absolute;left:14px;right:14px;bottom:7px;height:4px;border-radius:2px;background:var(--line)}
+.g-bar i{display:block;height:100%;border-radius:2px;background:var(--run);transition:width .6s cubic-bezier(.25,.8,.25,1)}
+.goal.live{border-color:var(--run);box-shadow:0 0 0 2px var(--run)}
+.goal.live .g-big{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.goal+.tabs{margin-top:10px}
+
+/* Stats */
+.statsv{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.card-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;margin-bottom:8px}
+.muted{color:var(--muted);font-weight:500;font-size:.85rem}
+.trend{font-size:.82rem;font-weight:600;padding:2px 8px;border-radius:20px}
+.trend.up{color:var(--renfo);background:var(--renfo-soft)}
+.trend.down{color:var(--run);background:var(--run-soft)}
+.chart{display:block;width:100%;height:auto;overflow:visible}
+.chart .grid{stroke:var(--line);stroke-dasharray:3 4}
+.chart .bar{fill:var(--run);opacity:.45;transform-box:fill-box;transform-origin:bottom;animation:barUp .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*35ms)}
+.chart .bar.cur{opacity:1}
+.chart .bar.gold{fill:var(--gold);opacity:1}
+.chart .val{font:600 11px "Barlow",system-ui,sans-serif;fill:var(--ink)}
+.chart .lab{font:500 10px "Barlow",system-ui,sans-serif;fill:var(--muted)}
+@keyframes barUp{from{transform:scaleY(0)}}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;animation:rise .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*40ms + .1s)}
+.t-l{color:var(--muted);font-size:.8rem;font-weight:500}
+.t-v{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.6rem;line-height:1.1}
+.t-s{color:var(--muted);font-size:.74rem}
+.split{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:3px}
+.split i{display:block;height:100%;border-radius:6px;transform-origin:left;animation:grow .8s cubic-bezier(.2,.8,.2,1) both .15s}
+.split .r{background:var(--run)}.split .f{background:var(--renfo)}
+.split-l{display:flex;justify-content:space-between;color:var(--muted);font-size:.84rem;margin-top:8px}
+.split-l span{display:inline-flex;align-items:center;gap:6px}
+.settings{gap:6px}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -284,20 +334,34 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
   <div id="summary"></div>
   </div>
 
+  <button class="goal" id="goalBar" hidden></button>
   <div class="tabs" role="group" aria-label="Affichage">
     <span class="tab-ind" aria-hidden="true"></span>
     <button id="tabWeek" aria-pressed="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Ma semaine</span></button>
     <button id="tabMonth" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M9.2 9.5v11M14.8 9.5v11M3.5 15h17"/></svg><span>Mois</span></button>
+    <button id="tabStats" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V12M10 20V5M15 20v-9M20 20V8"/></svg><span>Stats</span></button>
     <button id="tabBadges" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l2.5 6M16 3l-2.5 6"/><circle cx="12" cy="15" r="6"/><path d="M12 12.5l.9 1.8 2 .3-1.45 1.4.35 2-1.8-1-1.8 1 .35-2-1.45-1.4 2-.3z" fill="currentColor" stroke="none"/></svg><span>Badges</span></button>
   </div>
 
   <div id="pane">
   <div id="days"></div>
   <div id="footer"></div>
-  <div class="settings"><button class="gear" id="gear"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Semaine type</span></button></div>
+  <div class="settings"><button class="gear" id="gear"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Semaine type</span></button><button class="gear" id="goalBtn"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Objectif</span></button></div>
   </div>
 </div>
 <div class="save-state" id="saveState">Enregistré</div>
+
+<dialog id="goalDlg">
+  <form class="sheet" id="goalForm">
+    <h2>Mon objectif</h2>
+    <label>Objectif<input id="gName" maxlength="40" placeholder="10 km, semi-marathon, trail…"></label>
+    <label>Date<input id="gDate" type="date" required></label>
+    <div class="actions">
+      <button type="button" class="danger" id="gDel">Supprimer</button>
+      <button type="submit" class="primary">Enregistrer</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog id="dayDlg">
   <div class="sheet">
@@ -313,6 +377,10 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
     <div class="seg" role="group" aria-label="Type de séance">
       <button type="button" data-v="run" aria-pressed="true">Course</button>
       <button type="button" data-v="renfo" aria-pressed="false">Renforcement</button>
+    </div>
+    <div class="field-l">Jour</div>
+    <div class="daypick" role="group" aria-label="Jour de la séance">
+      <button type="button" data-d="0" aria-label="Lundi">L</button><button type="button" data-d="1" aria-label="Mardi">M</button><button type="button" data-d="2" aria-label="Mercredi">M</button><button type="button" data-d="3" aria-label="Jeudi">J</button><button type="button" data-d="4" aria-label="Vendredi">V</button><button type="button" data-d="5" aria-label="Samedi">S</button><button type="button" data-d="6" aria-label="Dimanche">D</button>
     </div>
     <label>Intitulé<input id="fTitle" maxlength="60" placeholder="Footing, fractionné, sortie longue…"></label>
     <div class="row">
@@ -367,8 +435,10 @@ const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-w
 
 function render(){
   updateTabs();
+  renderGoal();
   if(mode==="month"){renderMonth();return}
   if(mode==="badges"){renderBadges();return}
+  if(mode==="stats"){renderStats();return}
   const days=weekDays();
   const mon=currentMonday();
   const sun=new Date(mon);sun.setDate(mon.getDate()+6);
@@ -432,10 +502,14 @@ const dlg=document.getElementById("dlg");
 let fType="run";
 function setType(t){fType=t;dlg.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===t));document.getElementById("kmWrap").style.display=t==="run"?"":"none"}
 dlg.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>setType(b.dataset.v)));
+let fDay=0;
+function setDay(d){fDay=d;document.querySelectorAll(".daypick button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.d===d))}
+document.querySelectorAll(".daypick button").forEach(b=>b.addEventListener("click",()=>setDay(+b.dataset.d)));
 function openEdit(dayIdx,id){
   editing={dayIdx,id};
   const s=id?weekDays()[dayIdx].find(x=>x.id===id):null;
-  document.getElementById("dlgTitle").textContent=(s?"Modifier":"Nouvelle séance")+" – "+DAYS[dayIdx];
+  document.getElementById("dlgTitle").textContent=s?"Modifier la séance":"Nouvelle séance";
+  setDay(dayIdx);
   setType(s?s.type:"run");
   document.getElementById("fTitle").value=s?s.title:"";
   document.getElementById("fKm").value=s&&s.km!=null?s.km:"";
@@ -450,7 +524,11 @@ document.getElementById("form").addEventListener("submit",e=>{
   const list=weekDays()[editing.dayIdx];
   const num=v=>v===""?null:Math.max(0,parseFloat(String(v).replace(",",".")))||null;
   const data={type:fType,title:document.getElementById("fTitle").value.trim()||(fType==="run"?"Course":"Renforcement"),km:fType==="run"?num(document.getElementById("fKm").value):null,min:num(document.getElementById("fMin").value),notes:document.getElementById("fNotes").value.trim()};
-  if(editing.id){Object.assign(list.find(x=>x.id===editing.id),data)}else{list.push({id:uid(),done:false,...data})}
+  const target=weekDays()[fDay];
+  if(editing.id){
+    const i=list.findIndex(x=>x.id===editing.id),s=list[i];Object.assign(s,data);
+    if(fDay!==editing.dayIdx){list.splice(i,1);target.push(s);setTimeout(()=>toast("Séance déplacée à "+DAYS[fDay].toLowerCase()),250)}
+  }else{target.push({id:uid(),done:false,...data})}
   closeSheet(dlg);render();queueSave(true);
 });
 document.getElementById("del").addEventListener("click",()=>{
@@ -488,10 +566,11 @@ function updateTabs(){
   document.getElementById("tabWeek").setAttribute("aria-pressed",mode==="week");
   document.getElementById("tabMonth").setAttribute("aria-pressed",mode==="month");
   document.getElementById("tabBadges").setAttribute("aria-pressed",mode==="badges");
+  document.getElementById("tabStats").setAttribute("aria-pressed",mode==="stats");
   document.querySelector(".tabs").dataset.active=mode;
   const tpl=mode==="tpl";
   document.querySelector(".tabs").hidden=tpl;
-  document.getElementById("nav").hidden=tpl||mode==="badges";
+  document.getElementById("nav").hidden=tpl||mode==="badges"||mode==="stats";
   document.getElementById("closeTpl").hidden=!tpl;
   document.querySelector(".settings").hidden=tpl;
   document.querySelector(".tabs").nextElementSibling.style.marginTop=tpl?"14px":"";
@@ -574,7 +653,7 @@ function animate(dir,update){
   if(dir){pane.classList.remove("slide-next","slide-prev");void pane.offsetWidth;pane.classList.add(dir>0?"slide-next":"slide-prev")}
 }
 function go(dir){
-  if(mode==="tpl"||mode==="badges")return;
+  if(mode==="tpl"||mode==="badges"||mode==="stats")return;
   animate(dir,()=>{if(mode==="month")monthOffset+=dir;else weekOffset+=dir;render()});
 }
 document.getElementById("prev").onclick=()=>go(-1);
@@ -622,7 +701,50 @@ function streak(){
   return n;
 }
 const BICON={"check": "<path d=\"M5 12.5l4.2 4.2L19 7\"/>", "road": "<path d=\"M8 3L5 21M16 3l3 18M12 4v2.5M12 10.5v3M12 17.5V20\"/>", "mountain": "<path d=\"M3 20l6.5-11 4 6.5 2.5-3.5L21 20z\"/>", "dumbbell": "<path d=\"M6.5 7v10M17.5 7v10M3.5 10v4M20.5 10v4M6.5 12h11\"/>", "star": "<path d=\"M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.8l-5.25 2.8 1-5.8L3.5 9.7l5.9-.9z\"/>", "flame": "<path d=\"M12 3c.8 3.6 5 5.2 5 10a5 5 0 0 1-10 0c0-2.6 1.5-3.8 2-6 1.2 1 2 2.3 2.2 3.8C12.6 9 12.7 6 12 3z\"/>", "crown": "<path d=\"M3.5 8l4.3 4 4.2-6.5 4.2 6.5 4.3-4-1.8 11H5.3z\"/>"};
-const TABS=["week","month","badges"];
+const TABS=["week","month","stats","badges"];
+const goalDlg=document.getElementById("goalDlg");
+function parseDay(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)}
+function renderGoal(){
+  const bar=document.getElementById("goalBar"),g=state.goal;
+  bar.hidden=!g||mode==="tpl";
+  if(!g)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const end=parseDay(g.date),start=parseDay(g.created||keyOf(today));
+  const days=Math.round((end-today)/864e5);
+  const span=Math.max(1,Math.round((end-start)/864e5));
+  const pct=Math.max(0,Math.min(100,(1-days/span)*100));
+  const dateTxt=end.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"long"});
+  let big,small;
+  if(days>1){big="J-"+days;const w=Math.floor(days/7),r=days%7;small=dateTxt+" · "+(w?w+" sem."+(r?" "+r+" j":""):r+" jours")}
+  else if(days===1){big="Demain";small=dateTxt+" · dernière ligne droite"}
+  else if(days===0){big="Jour J";small="C’est aujourd’hui, à toi de jouer !"}
+  else{big="Fini";small="Touche pour définir un nouvel objectif"}
+  bar.className="goal"+(days<=0?" live":"");
+  bar.setAttribute("aria-label","Objectif "+g.name+" : "+big+", "+small+". Modifier");
+  bar.innerHTML=`<span class="g-ico">${'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>'}</span><span class="g-txt"><b></b><small></small></span><span class="g-big"></span><span class="g-bar"><i style="width:${pct}%"></i></span>`;
+  bar.querySelector("b").textContent=g.name;bar.querySelector("small").textContent=small;bar.querySelector(".g-big").textContent=big;
+}
+function openGoal(){
+  const g=state.goal;
+  document.getElementById("gName").value=g?g.name:"";
+  const d=new Date();d.setDate(d.getDate()+56);
+  document.getElementById("gDate").value=g?g.date:keyOf(d);
+  document.getElementById("gDate").min=keyOf(new Date());
+  document.getElementById("gDel").style.display=g?"":"none";
+  goalDlg.showModal();
+}
+document.getElementById("goalBar").onclick=openGoal;
+document.getElementById("goalBtn").onclick=openGoal;
+document.getElementById("goalForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const date=document.getElementById("gDate").value;if(!date)return;
+  const name=document.getElementById("gName").value.trim()||"Mon objectif";
+  const old=state.goal;
+  state.goal={name,date,created:old&&old.date===date?old.created:keyOf(new Date())};
+  closeSheet(goalDlg);render();queueSave(true);
+});
+document.getElementById("gDel").onclick=()=>{if(confirm("Supprimer ton objectif ?")){delete state.goal;closeSheet(goalDlg);render();queueSave(true)}};
+goalDlg.addEventListener("click",e=>{if(e.target===goalDlg)closeSheet(goalDlg)});
 function switchTab(t){
   if(t===mode)return;
   const dir=TABS.indexOf(t)>TABS.indexOf(mode)?1:-1;
@@ -665,6 +787,70 @@ function announceBadges(before){
   setTimeout(()=>toast("Nouveau badge : "+b.name+" · "+(b.names?b.names[lv-1]:TIERS[lv-1])),1500);
 }
 const fmtN=n=>(Math.round(n*10)/10).toString().replace(".",",");
+function fmtDur(min){min=Math.round(min);const hh=Math.floor(min/60),mm=min%60;return hh?hh+" h"+(mm?" "+String(mm).padStart(2,"0"):""):mm+" min"}
+function renderStats(){
+  const N=12,today=new Date();today.setHours(0,0,0,0);
+  const cur=mondayOf(today),weeks=[];
+  for(let k=N-1;k>=0;k--){
+    const mon=new Date(cur);mon.setDate(cur.getDate()-7*k);
+    const w=state.weeks[keyOf(mon)];
+    let km=0,done=0,planned=0,min=0,run=0,renfo=0;
+    if(w)w.forEach((list,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);
+      list.forEach(s=>{if(d<=today)planned++;if(!s.done)return;done++;min+=(+s.min||0);
+        if(s.type==="run"){run++;km+=(+s.km||0)}else renfo++})});
+    weeks.push({mon,km,done,planned,min,run,renfo,exists:!!w,perfect:isPerfect(mon)});
+  }
+  const sum=f=>weeks.reduce((a,w)=>a+f(w),0);
+  const totKm=sum(w=>w.km),totDone=sum(w=>w.done),totPlan=sum(w=>w.exists?w.planned:0),totMin=sum(w=>w.min);
+  const runs=sum(w=>w.run),renfos=sum(w=>w.renfo);
+  const last4=weeks.slice(-5,-1),avg4=last4.reduce((a,w)=>a+w.km,0)/4;
+  const prev4=weeks.slice(-9,-5),avgP=prev4.reduce((a,w)=>a+w.km,0)/4;
+  const maxKm=Math.max(1,...weeks.map(w=>w.km));
+  const all=badgeStats();
+  let best=0;Object.values(state.weeks).forEach(w=>{const k=w.flat().reduce((a,s)=>a+(s.done&&s.type==="run"?(+s.km||0):0),0);if(k>best)best=k});
+
+  document.getElementById("range").textContent="Stats";
+  document.getElementById("sub").textContent="Tes 12 dernières semaines";
+  const summary=document.getElementById("summary");summary.replaceChildren();
+  const tr=el("div",{class:"track month","aria-hidden":"true"});
+  weeks.forEach(w=>{const s=el("span",{class:w.perfect?"gold":""});s.append(el("i",{style:"width:"+Math.round(w.km/maxKm*100)+"%"}));tr.append(s)});
+  const sts=el("div",{class:"stats"});
+  sts.innerHTML=`<span><b>${fmtN(totKm)}</b> km courus</span><span><b>${totDone}</b> séances</span>`;
+  summary.append(tr,sts);
+
+  const box=el("div",{class:"statsv"});
+  // Graphique
+  const W=340,H=150,top=22,bot=22,gap=6,bw=(W-gap*(N-1))/N;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Kilomètres par semaine sur 12 semaines">`;
+  [0.5,1].forEach(f=>{const y=top+(H-top-bot)*(1-f);svg+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" class="grid"/>`});
+  weeks.forEach((w,i)=>{
+    const bh=Math.max(w.km?4:2,(H-top-bot)*w.km/maxKm),x=i*(bw+gap),y=H-bot-bh;
+    const isCur=i===N-1,cls=w.perfect?"bar gold":isCur?"bar cur":"bar";
+    svg+=`<rect class="${cls}" style="--i:${i}" x="${x}" y="${y}" width="${bw}" height="${bh}" rx="4"/>`;
+    if((isCur||w.km===maxKm)&&w.km)svg+=`<text class="val" x="${x+bw/2}" y="${y-6}" text-anchor="middle">${fmtN(w.km)}</text>`;
+    if(i%3===2||isCur)svg+=`<text class="lab" x="${x+bw/2}" y="${H-6}" text-anchor="middle">${isCur?"Cette sem.":w.mon.getDate()+" "+MONTHS[w.mon.getMonth()]}</text>`;
+  });
+  svg+=`</svg>`;
+  const chart=el("section",{class:"card"});
+  const trend=avgP?Math.round((avg4-avgP)/avgP*100):null;
+  chart.innerHTML=`<div class="card-h"><span>Km par semaine</span>${trend===null?"":`<span class="trend ${trend>=0?"up":"down"}">${trend>=0?"▲":"▼"} ${Math.abs(trend)} %</span>`}</div>${svg}`;
+  box.append(chart);
+  // Chiffres clés
+  const reg=totPlan?Math.round(totDone/totPlan*100):0;
+  const tiles=[["Moyenne",fmtN(avg4)+" km","par semaine (4 dernières)"],["Régularité",reg+" %","séances prévues faites"],["Plus longue",fmtN(all.long)+" km","sortie record"],["Meilleure semaine",fmtN(best)+" km","ton record hebdo"],["Temps",fmtDur(totMin),"d’entraînement (12 sem.)"],["Semaines parfaites",String(weeks.filter(w=>w.perfect).length),"sur les 12 dernières"]];
+  const grid=el("div",{class:"tiles"});
+  tiles.forEach(([a,b,c],i)=>{const t=el("div",{class:"tile",style:"--i:"+i});t.append(el("span",{class:"t-l"},a),el("span",{class:"t-v"},b),el("span",{class:"t-s"},c));grid.append(t)});
+  box.append(grid);
+  // Répartition
+  const tot=runs+renfos,rp=tot?Math.round(runs/tot*100):50;
+  const split=el("section",{class:"card"});
+  split.innerHTML=`<div class="card-h"><span>Répartition</span><span class="muted">${tot} séances</span></div>
+    <div class="split" role="img" aria-label="${runs} courses et ${renfos} renforcements"><i class="r" style="width:${tot?rp:50}%"></i><i class="f" style="width:${tot?100-rp:50}%"></i></div>
+    <div class="split-l"><span><i class="dot run ok"></i>Course · ${runs}</span><span><i class="dot renfo ok"></i>Renfo · ${renfos}</span></div>`;
+  box.append(split);
+  const daysEl=document.getElementById("days");daysEl.className="";daysEl.replaceChildren(box);
+  document.getElementById("footer").replaceChildren();
+}
 function renderBadges(){
   const st=badgeStats(),lv=badgeLevels();
   const tot=lv.reduce((a,b)=>a+b,0),max=BADGES.length*5;
@@ -750,6 +936,7 @@ function celebrate(){
 document.getElementById("tabWeek").onclick=()=>switchTab("week");
 document.getElementById("tabMonth").onclick=()=>switchTab("month");
 document.getElementById("tabBadges").onclick=()=>switchTab("badges");
+document.getElementById("tabStats").onclick=()=>switchTab("stats");
 let backMode="week";
 document.getElementById("gear").onclick=()=>{backMode=mode;animate(0,()=>{mode="tpl";render()})};
 document.getElementById("closeTpl").onclick=()=>{animate(0,()=>{mode=backMode;render()})};
