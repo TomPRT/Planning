@@ -65,9 +65,9 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
 .day{display:flex;align-items:stretch;border-top:1px solid var(--line)}
 .day:first-child{border-top:0}
 .day.today{box-shadow:inset 4px 0 0 var(--ink)}
-.day-head{flex:none;width:54px;display:flex;flex-direction:column;justify-content:center;padding:4px 0 4px 12px}
-.day-name{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:1.05rem;line-height:1.1}
-.day-date{color:var(--muted);font-size:.74rem;line-height:1.1}
+.day-head{flex:none;width:68px;display:flex;flex-direction:column;justify-content:center;padding:7px 0 7px 12px}
+.day-name{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:1.35rem;line-height:1.05}
+.day-date{color:var(--muted);font-size:.84rem;line-height:1.15}
 .day-body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .rest{color:var(--rest);font-size:.88rem;padding:9px 6px}
 .sess{display:flex;align-items:center;gap:9px;padding:5px 6px}
@@ -121,7 +121,6 @@ textarea{min-height:70px;resize:vertical}
 .dot.ok{background:var(--c)}
 .dot.miss{opacity:.4}
 .dot svg{width:9px;height:9px}
-.backup{display:flex;justify-content:space-between;gap:12px;margin-top:18px;border-top:1px solid var(--line);padding-top:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -147,11 +146,6 @@ textarea{min-height:70px;resize:vertical}
   <div id="summary"></div>
   <div id="days"></div>
   <div id="footer"></div>
-  <div class="backup">
-    <button class="link" id="exp">Exporter mes données</button>
-    <button class="link" id="imp">Importer une sauvegarde</button>
-    <input type="file" id="impFile" accept="application/json,.json" hidden>
-  </div>
 </div>
 <div class="save-state" id="saveState">Enregistré</div>
 
@@ -381,22 +375,7 @@ function queueSave(show){
 function loadLocal(){try{const raw=localStorage.getItem(LS);if(raw){const s=JSON.parse(raw);if(s&&s.template)state=s}}catch(e){}}
 
 loadLocal();render();
-// Sauvegarde manuelle (les données ne vivent que dans ce navigateur)
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
-document.getElementById("exp").onclick=()=>{
-  const blob=new Blob([JSON.stringify(state)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="planning-course-"+keyOf(new Date())+".json";document.body.append(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast("Données exportées");
-};
-document.getElementById("imp").onclick=()=>document.getElementById("impFile").click();
-document.getElementById("impFile").onchange=async e=>{
-  const f=e.target.files[0];if(!f)return;
-  try{const s=JSON.parse(await f.text());if(!s||!Array.isArray(s.template)||s.template.length!==7||typeof s.weeks!=="object")throw 0;
-    if(confirm("Remplacer ton planning actuel par cette sauvegarde ?")){state=s;render();queueSave(true);toast("Sauvegarde importée")}}
-  catch(err){toast("Ce fichier n’est pas une sauvegarde du planning")}
-  e.target.value="";
-};
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
 (async()=>{
   try{
