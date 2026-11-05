@@ -967,7 +967,7 @@ function renderStats(){
   box.append(chart);
   // Chiffres clés
   const reg=totPlan?Math.round(totDone/totPlan*100):0;
-  const tiles=[["Total",fmtN(all.km)+" km","courus depuis le début"],["Régularité",reg+" %","séances prévues faites"],["Plus longue",fmtN(all.long)+" km","sortie record"],["Meilleure semaine",fmtN(best)+" km","ton record hebdo"],["Temps total",fmtDur(allMin),"d’entraînement depuis le début"],["Semaines parfaites",String(weeks.filter(w=>w.perfect).length),"sur les 12 dernières"],["Allure moyenne",pk?fmtPace(pk,pm)+" /km":"–","sur tes courses saisies"],["Meilleure allure",bestPace?fmtPace(1,bestPace)+" /km":"–","sortie de 3 km ou plus"]];
+  const tiles=[["Total",fmtN(all.km)+" km","courus depuis le début"],["Plus longue",fmtN(all.long)+" km","sortie record"],["Meilleure semaine",fmtN(best)+" km","ton record hebdo"],["Temps total",fmtDur(allMin),"d’entraînement depuis le début"],["Allure moyenne",pk?fmtPace(pk,pm)+" /km":"–","sur tes courses saisies"],["Meilleure allure",bestPace?fmtPace(1,bestPace)+" /km":"–","sortie de 3 km ou plus"]];
   const grid=el("div",{class:"tiles"});
   tiles.forEach(([a,b,c],i)=>{const t=el("div",{class:"tile",style:"--i:"+i});t.append(el("span",{class:"t-l"},a),el("span",{class:"t-v"},b),el("span",{class:"t-s"},c));grid.append(t)});
   box.append(grid);
