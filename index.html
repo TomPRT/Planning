@@ -185,13 +185,15 @@ header>div:first-child{min-width:0}
 @keyframes mwPop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
 @keyframes mwSpin{from{transform:rotateY(540deg) scale(.5)}to{transform:none}}
 .badges{display:flex;flex-direction:column;gap:8px}
-.badge{--tc:var(--line-strong);--tc-soft:var(--bg);display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
-.badge.t1{--tc:#C07A3F;--tc-soft:#F8E9DC}
-.badge.t2{--tc:#8C9AAE;--tc-soft:#EBEFF4}
-.badge.t3{--tc:#D9A400;--tc-soft:#FFF3C9}
-.badge.t4{--tc:#2BA6C2;--tc-soft:#DCF2F7}
-.badge.t5{--tc:#8B5CF6;--tc-soft:#EEE7FE;border-color:#8B5CF6}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .badge{--tc-soft:#0D1320}:root:not([data-theme="light"]) .badge.t1{--tc-soft:#3A2617}:root:not([data-theme="light"]) .badge.t2{--tc-soft:#262E3C}:root:not([data-theme="light"]) .badge.t3{--tc-soft:#352D12}:root:not([data-theme="light"]) .badge.t4{--tc-soft:#12323A}:root:not([data-theme="light"]) .badge.t5{--tc-soft:#2A1F48}}
+.badge,.lvl,.bd-medal{--tc:var(--line-strong);--tc-soft:var(--bg)}
+.badge{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.t1{--tc:#C07A3F;--tc-soft:#F8E9DC}
+.t2{--tc:#8C9AAE;--tc-soft:#EBEFF4}
+.t3{--tc:#D9A400;--tc-soft:#FFF3C9}
+.t4{--tc:#2BA6C2;--tc-soft:#DCF2F7}
+.t5{--tc:#8B5CF6;--tc-soft:#EEE7FE}
+.badge.t5{border-color:#8B5CF6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) :is(.badge,.lvl,.bd-medal){--tc-soft:#0D1320}:root:not([data-theme="light"]) .t1{--tc-soft:#3A2617}:root:not([data-theme="light"]) .t2{--tc-soft:#262E3C}:root:not([data-theme="light"]) .t3{--tc-soft:#352D12}:root:not([data-theme="light"]) .t4{--tc-soft:#12323A}:root:not([data-theme="light"]) .t5{--tc-soft:#2A1F48}}
 .medal{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--tc-soft);color:var(--tc);border:3px solid var(--tc)}
 .badge.t0 .medal{color:var(--rest);border-style:dashed}
 .badge.t5 .medal{background:var(--tc);color:#fff;box-shadow:0 0 0 3px var(--tc-soft)}
@@ -320,6 +322,38 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
 .pace-l{color:var(--muted);font-size:.82rem;margin-top:2px}
 .ghost{padding:13px 14px;border:1px solid var(--line-strong);border-radius:12px;background:none;font-weight:600;color:var(--ink)}
 .ghost:active{transform:scale(.96)}
+/* Badges cliquables + détail */
+button.badge{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:transform .15s}
+button.badge:active{transform:scale(.98)}
+.badge .b-info::after{content:none}
+.bd-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.bd-head h2{margin:0}
+.bd-medal{flex:none;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:var(--tc-soft);color:var(--tc);border:3px solid var(--tc);animation:pop .5s cubic-bezier(.2,1.4,.4,1) both .05s}
+.bd-medal.t0{color:var(--rest);border-style:dashed}
+.bd-medal.t5{background:var(--tc);color:#fff;box-shadow:0 0 0 4px var(--tc-soft)}
+.bd-tier{font-weight:600;font-size:.9rem;color:var(--tc)}
+.bd-tier.t0{color:var(--muted)}
+.bd-desc{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.bd-now{display:flex;align-items:baseline;gap:8px}
+.bd-val{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:2.6rem;line-height:1}
+.bd-unit{color:var(--muted)}
+.bd-next{margin:4px 0 14px;font-weight:500}
+.lvls{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:6px}
+.lvl{position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+.lvl:nth-child(2){animation-delay:.04s}.lvl:nth-child(3){animation-delay:.08s}.lvl:nth-child(4){animation-delay:.12s}.lvl:nth-child(5){animation-delay:.16s}
+.l-dot{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 .85rem "Barlow Condensed","Arial Narrow",sans-serif;border:2px solid var(--tc);color:var(--tc)}
+.lvl.got .l-dot{background:var(--tc);color:#fff}
+.lvl.lock{opacity:.55}
+.lvl.lock .l-dot{border-style:dashed}
+.lvl.curr{border-color:var(--tc);background:var(--tc-soft);padding-bottom:16px}
+.l-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.l-name{font-weight:600}
+.l-th{color:var(--muted);font-size:.82rem}
+.l-st{flex:none;font-size:.8rem;font-weight:600;color:var(--muted)}
+.lvl.got .l-st,.lvl.curr .l-st{color:var(--tc)}
+.l-bar{position:absolute;left:52px;right:12px;bottom:7px;height:4px;border-radius:2px;background:var(--line)}
+.l-bar i{display:block;height:100%;border-radius:2px;background:var(--tc);transform-origin:left;animation:grow .8s cubic-bezier(.2,.8,.2,1) both .2s}
+#badgeDlg .sheet{max-height:88vh;overflow-y:auto}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -357,6 +391,13 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
   </div>
 </div>
 <div class="save-state" id="saveState">Enregistré</div>
+
+<dialog id="badgeDlg">
+  <div class="sheet">
+    <div id="bdBody"></div>
+    <button type="button" class="primary wide" id="bdClose">Fermer</button>
+  </div>
+</dialog>
 
 <dialog id="doneDlg">
   <form class="sheet" id="doneForm">
@@ -740,6 +781,9 @@ const BICON={"check": "<path d=\"M5 12.5l4.2 4.2L19 7\"/>", "road": "<path d=\"M
 const TABS=["week","month","stats","badges"];
 const goalDlg=document.getElementById("goalDlg");
 const doneDlg=document.getElementById("doneDlg");
+const badgeDlg=document.getElementById("badgeDlg");
+document.getElementById("bdClose").onclick=()=>closeSheet(badgeDlg);
+badgeDlg.addEventListener("click",e=>{if(e.target===badgeDlg)closeSheet(badgeDlg)});
 let doneCb=null;
 function updPace(){const k=parseFloat(String(document.getElementById("dKm").value).replace(",",".")),m=parseFloat(String(document.getElementById("dMin").value).replace(",","."));
   const p=fmtPace(k,m);document.getElementById("dPace").textContent=p?p+" /km":"–"}
@@ -809,6 +853,33 @@ function switchTab(t){
   animate(dir,()=>{mode=t;render()});
 }
 const TIERS=["Bronze","Argent","Or","Platine","Légende"];
+const BDESC={sess:"Chaque séance cochée compte, course comme renfo.",km:"Tous les kilomètres de tes courses cochées. Si tu as saisi la distance réelle, c’est elle qui compte.",long:"Ta plus longue course en une seule sortie.",renfo:"Chaque séance de renforcement cochée.",pw:"Une semaine où toutes les séances prévues sont cochées.",streak:"Ton record de semaines parfaites à la suite, sans en rater une.",pm:"Un mois où toutes les séances de tous ses jours sont cochées."};
+function openBadge(k){
+  const b=BADGES[k],st=badgeStats(),v=badgeLevels()[k],val=st[b.id];
+  const tn=i=>b.names?b.names[i]:TIERS[i];
+  const box=document.getElementById("bdBody");box.replaceChildren();
+  const medal=el("div",{class:"bd-medal t"+v,"aria-hidden":"true"});
+  medal.innerHTML=`<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${BICON[b.icon]}</svg>`;
+  const head=el("div",{class:"bd-head"},medal,el("div",{},el("h2",{},b.name),el("div",{class:"bd-tier t"+v},v?"Niveau "+v+" · "+tn(v-1):"Pas encore débloqué")));
+  const now=el("div",{class:"bd-now"},el("span",{class:"bd-val"},fmtN(val)),el("span",{class:"bd-unit"},b.unit));
+  let nextTxt="Tu as atteint le niveau maximum. Légende !";
+  if(v<5){const rest=Math.max(0,b.steps[v]-val);nextTxt="Encore "+fmtN(Math.round(rest*10)/10)+" "+b.unit+" pour "+tn(v)+"."}
+  box.append(head,el("p",{class:"bd-desc"},BDESC[b.id]),now,el("p",{class:"bd-next"},nextTxt));
+  const ul=el("ol",{class:"lvls"});
+  b.steps.forEach((x,i)=>{
+    const got=i<v,curr=i===v;
+    const pct=got?100:curr?Math.max(0,Math.min(100,(val-(i?b.steps[i-1]:0))/(x-(i?b.steps[i-1]:0))*100)):0;
+    const li=el("li",{class:"lvl t"+(i+1)+(got?" got":curr?" curr":" lock")});
+    const dot=el("span",{class:"l-dot","aria-hidden":"true"});dot.innerHTML=got?'<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg>':String(i+1);
+    const info=el("span",{class:"l-info"},el("span",{class:"l-name"},tn(i)),el("span",{class:"l-th"},fmtN(x)+" "+b.unit));
+    const stat=el("span",{class:"l-st"},got?"Débloqué":curr?Math.floor(pct)+" %":"Verrouillé");
+    li.append(dot,info,stat);
+    if(curr){const bar=el("span",{class:"l-bar"});bar.append(el("i",{style:"width:"+pct+"%"}));li.append(bar)}
+    ul.append(li);
+  });
+  box.append(ul);
+  document.getElementById("badgeDlg").showModal();
+}
 const BADGES=[
   {id:"sess",icon:"check",name:"Séances",unit:"séances",steps:[10,50,100,250,500]},
   {id:"km",icon:"road",name:"Kilomètres",unit:"km",steps:[50,200,500,1000,2500]},
@@ -844,7 +915,7 @@ function announceBadges(before){
   const b=BADGES[i],lv=after[i];
   setTimeout(()=>toast("Nouveau badge : "+b.name+" · "+(b.names?b.names[lv-1]:TIERS[lv-1])),1500);
 }
-const fmtN=n=>(Math.round(n*10)/10).toString().replace(".",",");
+const fmtN=n=>(Math.round(n*10)/10).toLocaleString("fr-FR",{maximumFractionDigits:1});
 function fmtDur(min){min=Math.round(min);const hh=Math.floor(min/60),mm=min%60;return hh?hh+" h"+(mm?" "+String(mm).padStart(2,"0"):""):mm+" min"}
 function renderStats(){
   const N=12,today=new Date();today.setHours(0,0,0,0);
@@ -925,7 +996,7 @@ function renderBadges(){
     const v=lv[k],val=st[b.id],next=b.steps[v],prevStep=v?b.steps[v-1]:0;
     const pct=v===5?100:Math.max(0,Math.min(100,(val-prevStep)/(next-prevStep)*100));
     const tierName=v?(b.names?b.names[v-1]:TIERS[v-1]):"À débloquer";
-    const row=el("div",{class:"badge t"+v,style:"--i:"+k});
+    const row=el("button",{type:"button",class:"badge t"+v,style:"--i:"+k,onclick:()=>openBadge(k)});
     const medal=el("div",{class:"medal","aria-hidden":"true"});
     medal.innerHTML=`<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${BICON[b.icon]}</svg>`;
     const info=el("div",{class:"b-info"});
