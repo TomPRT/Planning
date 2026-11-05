@@ -63,7 +63,7 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:12p
 .track span{flex:1;height:12px;border-radius:6px;background:var(--hero-lane);transition:background .3s}
 .track span.run.ok{background:var(--run)}
 .track span.renfo.ok{background:var(--renfo)}
-.track.perfect span{background:var(--hero-gold)}
+.track.perfect span,.track.perfect span.ok{background:var(--hero-gold)}
 .stats{display:flex;justify-content:space-between;color:var(--hero-muted);font-size:.92rem;margin:0}
 .stats b{color:var(--hero-ink);font-weight:600;font-size:1.05rem}
 .gold-txt b{color:var(--hero-gold)}
@@ -165,6 +165,13 @@ textarea{min-height:70px;resize:vertical}
 .di-go{color:var(--rest);font-size:1.4rem;line-height:1}
 .primary.wide{width:100%;display:block}
 .body{cursor:default}
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+#days.slide-next{animation:slideNext .26s ease-out}
+#days.slide-prev{animation:slidePrev .26s ease-out}
+@keyframes slideNext{from{transform:translateX(28px);opacity:.3}to{transform:none;opacity:1}}
+@keyframes slidePrev{from{transform:translateX(-28px);opacity:.3}to{transform:none;opacity:1}}
+.sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header>div:first-child{min-width:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -272,7 +279,7 @@ function render(){
   if(mode==="tpl"){range.textContent="Semaine type";sub.textContent="Base utilisée pour chaque nouvelle semaine"}
   else{
     range.textContent=mon.getDate()+(mon.getMonth()!==sun.getMonth()?" "+MONTHS[mon.getMonth()]:"")+" – "+sun.getDate()+" "+MONTHS[sun.getMonth()];
-    sub.textContent=weekOffset===0?"Cette semaine":weekOffset===1?"Semaine prochaine":weekOffset===-1?"Semaine dernière":(weekOffset>0?"Dans "+weekOffset+" semaines":"Il y a "+(-weekOffset)+" semaines");
+    sub.textContent=weekOffset===0?todayLine():weekOffset===1?"Semaine prochaine":weekOffset===-1?"Semaine dernière":(weekOffset>0?"Dans "+weekOffset+" semaines":"Il y a "+(-weekOffset)+" semaines");
   }
 
   // Résumé
@@ -305,7 +312,7 @@ function render(){
     list.forEach(s=>{
       const row=el("div",{class:"sess"+(s.done&&mode==="week"?" done":"")+(s.id===lastToggled?" just":""),"data-type":s.type});
       if(mode==="week"){
-        const c=el("button",{class:"check","aria-label":(s.done?"Marquer non faite : ":"Marquer faite : ")+s.title,"aria-pressed":s.done,onclick:()=>{s.done=!s.done;lastToggled=s.id;render();lastToggled=null;queueSave(true)}});
+        const c=el("button",{class:"check","aria-label":(s.done?"Marquer non faite : ":"Marquer faite : ")+s.title,"aria-pressed":s.done,onclick:()=>{const wk=weekDays().flat();const was=wk.every(x=>x.done);s.done=!s.done;lastToggled=s.id;render();lastToggled=null;queueSave(true);if(!was&&wk.every(x=>x.done))celebrate()}});
         c.innerHTML=CHECK;row.append(c);
       }
       row.append(el("div",{class:"body"},el("span",{class:"title"},s.title||(s.type==="run"?"Course":"Renforcement")),el("span",{class:"meta"},fmtMeta(s))));
@@ -398,7 +405,7 @@ function renderMonth(){
   const last=new Date(y,m+1,0);
   const name=MONTHS_FULL[m];
   document.getElementById("range").textContent=name.charAt(0).toUpperCase()+name.slice(1)+" "+y;
-  document.getElementById("sub").textContent="Touche un jour pour ouvrir sa semaine";
+  const st0=streak();document.getElementById("sub").textContent=st0?"★ Série : "+st0+" semaine"+(st0>1?"s":"")+" parfaite"+(st0>1?"s":"")+" d’affilée":"Touche un jour pour ouvrir sa semaine";
 
   let done=0,total=0,km=0;
   for(let d=new Date(first);d<=last;d.setDate(d.getDate()+1)){
@@ -444,8 +451,50 @@ function renderMonth(){
   const foot=document.getElementById("footer");foot.replaceChildren();
   if(monthOffset!==0)foot.append(el("button",{class:"link",onclick:()=>{monthOffset=0;render()}},"Revenir à ce mois"));
 }
-document.getElementById("prev").onclick=()=>{if(mode==="month")monthOffset--;else weekOffset--;render()};
-document.getElementById("next").onclick=()=>{if(mode==="month")monthOffset++;else weekOffset++;render()};
+function go(dir){
+  if(mode==="tpl")return;
+  if(mode==="month")monthOffset+=dir;else weekOffset+=dir;
+  render();
+  const d=document.getElementById("days");
+  d.classList.remove("slide-next","slide-prev");void d.offsetWidth;d.classList.add(dir>0?"slide-next":"slide-prev");
+}
+document.getElementById("prev").onclick=()=>go(-1);
+document.getElementById("next").onclick=()=>go(1);
+(()=>{let x0=null,y0=0;const area=document.querySelector(".wrap");
+  area.addEventListener("touchstart",e=>{if(e.touches.length!==1){x0=null;return}x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  area.addEventListener("touchend",e=>{if(x0===null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6)go(dx<0?1:-1)},{passive:true});
+})();
+function todayLine(){
+  const list=weekDays()[(new Date().getDay()+6)%7];
+  if(!list.length)return "Aujourd’hui : repos";
+  const left=list.filter(s=>!s.done);
+  if(!left.length)return "Aujourd’hui : fait ✓";
+  return "Aujourd’hui : "+left.map(s=>s.title+(s.type==="run"&&s.km?" "+String(s.km).replace(".",",")+" km":"")).join(" + ");
+}
+function streak(){
+  const d=mondayOf(new Date());
+  if(!isPerfect(d))d.setDate(d.getDate()-7);
+  let n=0;while(isPerfect(d)){n++;d.setDate(d.getDate()-7)}
+  return n;
+}
+function celebrate(){
+  setTimeout(()=>toast("★ Semaine parfaite !"),700);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const cs=getComputedStyle(document.documentElement);
+  const cols=["--run","--renfo","--hero-gold"].map(v=>cs.getPropertyValue(v).trim());
+  const cv=document.createElement("canvas");cv.className="confetti";document.body.append(cv);
+  const dpr=devicePixelRatio||1,W=innerWidth,H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
+  const ps=Array.from({length:90},()=>({x:W/2+(Math.random()-.5)*60,y:H*.32,vx:(Math.random()-.5)*9,vy:-Math.random()*10-4,
+    s:Math.random()*6+5,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.floor(Math.random()*3)],round:Math.random()<.4}));
+  const t0=performance.now();
+  (function f(t){const k=(t-t0)/1600;ctx.clearRect(0,0,W,H);
+    ps.forEach(p=>{p.vy+=.28;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+      ctx.save();ctx.globalAlpha=Math.max(0,1-k*k);ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;
+      if(p.round){ctx.beginPath();ctx.arc(0,0,p.s/2.4,0,7);ctx.fill()}else ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore()});
+    if(k<1)requestAnimationFrame(f);else cv.remove()})(t0);
+}
 document.getElementById("tabWeek").onclick=()=>{mode="week";render()};
 document.getElementById("tabMonth").onclick=()=>{mode="month";render()};
 let backMode="week";
