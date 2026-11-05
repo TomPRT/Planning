@@ -70,10 +70,12 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:12p
 .note{color:var(--hero-muted);font-size:.92rem;margin:0}
 
 /* Onglets */
-.tabs{display:flex;gap:4px;margin:12px 0 12px;border-bottom:1px solid var(--line-strong)}
-.tabs button{flex:1;border:0;background:none;padding:9px 4px 10px;font-weight:600;color:var(--muted);position:relative}
-.tabs button[aria-pressed="true"]{color:var(--ink)}
-.tabs button[aria-pressed="true"]::after{content:"";position:absolute;left:22%;right:22%;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:var(--run)}
+.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;margin:14px 0 12px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.tabs::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:10px;background:var(--hero);transition:transform .28s cubic-bezier(.3,.7,.3,1)}
+.tabs[data-active="month"]::before{transform:translateX(100%)}
+.tabs button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:7px;border:0;background:none;padding:9px 6px;border-radius:10px;font-weight:600;font-size:.95rem;color:var(--muted);transition:color .2s}
+.tabs button[aria-pressed="true"]{color:var(--hero-ink)}
+.tabs button[aria-pressed="false"]:active{color:var(--ink)}
 
 /* Semaine */
 .week{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .3s,box-shadow .3s}
@@ -149,6 +151,12 @@ textarea{min-height:70px;resize:vertical}
 .settings{display:flex;justify-content:center;margin-top:18px}
 .gear{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--rest);font-size:.82rem;font-weight:500;padding:8px 10px;border-radius:20px}
 .gear:active{background:var(--line)}
+.track.month span{position:relative;overflow:hidden}
+.track.month i{position:absolute;inset:0 auto 0 0;background:var(--run);border-radius:6px}
+.track.month span.gold i{background:var(--hero-gold);width:100%!important}
+.legend.below{color:var(--muted);margin:14px 2px 0}
+.legend.below .star-l{color:var(--gold)}
+.legend.below .dot.miss{opacity:.35}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -170,8 +178,8 @@ textarea{min-height:70px;resize:vertical}
   </div>
 
   <div class="tabs" role="group" aria-label="Affichage">
-    <button id="tabWeek" aria-pressed="true">Ma semaine</button>
-    <button id="tabMonth" aria-pressed="false">Mois</button>
+    <button id="tabWeek" aria-pressed="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Ma semaine</span></button>
+    <button id="tabMonth" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M9.2 9.5v11M14.8 9.5v11M3.5 15h17"/></svg><span>Mois</span></button>
   </div>
 
   <div id="days"></div>
@@ -333,6 +341,7 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
 function updateTabs(){
   document.getElementById("tabWeek").setAttribute("aria-pressed",mode==="week");
   document.getElementById("tabMonth").setAttribute("aria-pressed",mode==="month");
+  document.querySelector(".tabs").dataset.active=mode;
   const tpl=mode==="tpl";
   document.querySelector(".tabs").hidden=tpl;
   document.getElementById("nav").hidden=tpl;
@@ -364,7 +373,15 @@ function renderMonth(){
   st.innerHTML=`<span><b>${done}/${total}</b> séances faites</span><span><b>${(Math.round(km*10)/10).toString().replace(".",",")}</b> km courus</span>`;
   const lg=el("div",{class:"legend"});
   lg.innerHTML=`<span><i class="dot run ok"></i>Course faite</span><span><i class="dot renfo ok"></i>Renfo fait</span><span><i class="dot run"></i>Prévue</span><span><i class="dot run miss"></i>Manquée</span><span><span class="star-l">★</span>Semaine parfaite</span>`;
-  summary.append(st,lg);
+  const mt=el("div",{class:"track month","aria-hidden":"true"});
+  for(let w=mondayOf(first);w<=last;w.setDate(w.getDate()+7)){
+    let a=0,b=0;
+    for(let i=0;i<7;i++){const d=new Date(w);d.setDate(w.getDate()+i);if(d.getMonth()!==m)continue;sessionsOn(d).forEach(s=>{b++;if(s.done)a++})}
+    const seg=el("span",{class:b&&isPerfect(w)?"gold":""});
+    seg.append(el("i",{style:"width:"+(b?Math.round(a/b*100):0)+"%"}));
+    mt.append(seg);
+  }
+  summary.append(mt,st);
 
   const grid=el("div",{class:"cal"});
   ["L","M","M","J","V","S","D"].forEach(x=>grid.append(el("div",{class:"dow","aria-hidden":"true"},x)));
@@ -387,7 +404,7 @@ function renderMonth(){
     if(perfect&&day.getDay()===0)cell.append(el("span",{class:"star","aria-hidden":"true"},"★"));
     grid.append(cell);
   }
-  const daysEl=document.getElementById("days");daysEl.className="";daysEl.replaceChildren(grid);
+  const daysEl=document.getElementById("days");daysEl.className="";lg.classList.add("below");daysEl.replaceChildren(grid,lg);
   const foot=document.getElementById("footer");foot.replaceChildren();
   if(monthOffset!==0)foot.append(el("button",{class:"link",onclick:()=>{monthOffset=0;render()}},"Revenir à ce mois"));
 }
