@@ -395,6 +395,13 @@ header{margin-bottom:16px}
 .settings{margin-top:22px;opacity:.85}
 #footer:empty{display:none}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab-ind{box-shadow:none;background:var(--surface)}:root:not([data-theme="light"]) .tabs{background:var(--surface);}:root:not([data-theme="light"]) .tab-ind{background:var(--line-strong)}}
+/* Sauvegarde */
+.gear{position:relative}
+.gear.due::after{content:"";position:absolute;top:6px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--run)}
+.bk-status{font-weight:600;margin:-6px 0 6px}
+.bk-status.warn{color:var(--run)}
+.bk-help{color:var(--muted);font-size:.9rem;margin:0 0 16px}
+.ghost.wide{width:100%;display:block;margin-top:8px}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -428,10 +435,21 @@ header{margin-bottom:16px}
   <div id="pane">
   <div id="days"></div>
   <div id="footer"></div>
-  <div class="settings"><button class="gear" id="gear"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Semaine type</span></button><button class="gear" id="goalBtn"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Objectif</span></button></div>
+  <div class="settings"><button class="gear" id="gear"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Semaine type</span></button><button class="gear" id="goalBtn"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Objectif</span></button><button class="gear" id="bkBtn"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4 4 0 0 1-1 7.9"/><path d="M12 12v8M9 17l3 3 3-3"/></svg><span>Sauvegarde</span></button></div>
   </div>
 </div>
 <div class="save-state" id="saveState">Enregistré</div>
+
+<dialog id="bkDlg">
+  <div class="sheet">
+    <h2>Sauvegarde</h2>
+    <p class="bk-status" id="bkStatus"></p>
+    <p class="bk-help">Tes données ne sont que sur ce téléphone. Enregistre un fichier dans Fichiers ou iCloud Drive pour les retrouver si tu changes de téléphone.</p>
+    <button type="button" class="primary wide" id="bkSave">Sauvegarder maintenant</button>
+    <button type="button" class="ghost wide" id="bkLoad">Restaurer une sauvegarde</button>
+    <input type="file" id="bkFile" accept="application/json,.json" hidden>
+  </div>
+</dialog>
 
 <dialog id="badgeDlg">
   <div class="sheet">
@@ -554,6 +572,7 @@ const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-w
 function render(){
   updateTabs();
   renderGoal();
+  updBackupDot();
   if(mode==="month"){renderMonth();return}
   if(mode==="badges"){renderBadges();return}
   if(mode==="stats"){renderStats();return}
@@ -819,6 +838,42 @@ const TABS=["week","month","stats","badges"];
 const goalDlg=document.getElementById("goalDlg");
 const doneDlg=document.getElementById("doneDlg");
 const badgeDlg=document.getElementById("badgeDlg");
+const bkDlg=document.getElementById("bkDlg");
+function daysSince(k){if(!k)return Infinity;const d=parseDay(k),t=new Date();t.setHours(0,0,0,0);return Math.round((t-d)/864e5)}
+function hasData(){return Object.values(state.weeks).some(w=>w.flat().some(s=>s.done))}
+function backupDue(){return hasData()&&daysSince(state.lastBackup)>30}
+function updBackupDot(){document.getElementById("bkBtn").classList.toggle("due",backupDue())}
+function openBackup(){
+  const d=daysSince(state.lastBackup);
+  document.getElementById("bkStatus").textContent=d===Infinity?"Aucune sauvegarde pour l’instant":d===0?"Dernière sauvegarde : aujourd’hui":d===1?"Dernière sauvegarde : hier":"Dernière sauvegarde : il y a "+d+" jours";
+  document.getElementById("bkStatus").classList.toggle("warn",backupDue());
+  bkDlg.showModal();
+}
+document.getElementById("bkBtn").onclick=openBackup;
+bkDlg.addEventListener("click",e=>{if(e.target===bkDlg)closeSheet(bkDlg)});
+document.getElementById("bkSave").onclick=async()=>{
+  const today=keyOf(new Date());
+  const json=JSON.stringify({app:"planning-course",version:1,date:today,state:{...state,lastBackup:today}});
+  const name="planning-course-"+today+".json";
+  const done=()=>{state.lastBackup=today;queueSave(false);updBackupDot();closeSheet(bkDlg);setTimeout(()=>toast("Sauvegarde enregistrée"),250)};
+  try{
+    const file=new File([json],name,{type:"application/json"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"Sauvegarde du planning"});done();return}
+  }catch(err){if(err&&err.name==="AbortError")return}
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));a.download=name;
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);done();
+};
+document.getElementById("bkLoad").onclick=()=>document.getElementById("bkFile").click();
+document.getElementById("bkFile").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{
+    const raw=JSON.parse(await f.text());const s=raw&&raw.state?raw.state:raw;
+    if(!s||!Array.isArray(s.template)||s.template.length!==7||typeof s.weeks!=="object")throw 0;
+    const n=Object.keys(s.weeks).length;
+    if(!confirm("Remplacer tes données actuelles par cette sauvegarde"+(raw.date?" du "+parseDay(raw.date).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}):"")+" ("+n+" semaine"+(n>1?"s":"")+") ?"))return;
+    state=s;closeSheet(bkDlg);render();queueSave(false);setTimeout(()=>toast("Sauvegarde restaurée"),250);
+  }catch(err){toast("Ce fichier n’est pas une sauvegarde du planning")}
+};
 document.getElementById("bdClose").onclick=()=>closeSheet(badgeDlg);
 badgeDlg.addEventListener("click",e=>{if(e.target===badgeDlg)closeSheet(badgeDlg)});
 let doneCb=null;
@@ -1125,6 +1180,7 @@ function queueSave(show){
 function loadLocal(){try{const raw=localStorage.getItem(LS);if(raw){const s=JSON.parse(raw);if(s&&s.template)state=s}}catch(e){}}
 
 loadLocal();render();
+setTimeout(()=>{if(backupDue())toast("Pense à sauvegarder tes données (en bas de l’app)")},1800);
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
 (async()=>{
