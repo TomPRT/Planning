@@ -71,9 +71,9 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:12p
 
 /* Onglets */
 .tabs{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;margin:14px 0 12px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-.tabs::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);border-radius:10px;background:var(--hero);transition:transform .28s cubic-bezier(.3,.7,.3,1)}
-.tabs[data-active="month"]::before{transform:translateX(100%)}
-.tabs[data-active="badges"]::before{transform:translateX(200%)}
+.tab-ind{position:absolute;view-transition-name:tab-ind;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);border-radius:10px;background:var(--hero);transition:transform .28s cubic-bezier(.3,.7,.3,1)}
+.tabs[data-active="month"] .tab-ind{transform:translateX(100%)}
+.tabs[data-active="badges"] .tab-ind{transform:translateX(200%)}
 .tabs button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:none;padding:9px 4px;border-radius:10px;font-weight:600;font-size:.92rem;white-space:nowrap;color:var(--muted);transition:color .2s}
 .tabs button[aria-pressed="true"]{color:var(--hero-ink)}
 .tabs button[aria-pressed="false"]:active{color:var(--ink)}
@@ -167,8 +167,8 @@ textarea{min-height:70px;resize:vertical}
 .primary.wide{width:100%;display:block}
 .body{cursor:default}
 .confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
-#days.slide-next{animation:slideNext .26s ease-out}
-#days.slide-prev{animation:slidePrev .26s ease-out}
+#pane.slide-next{animation:slideNext .3s cubic-bezier(.25,.8,.25,1)}
+#pane.slide-prev{animation:slidePrev .3s cubic-bezier(.25,.8,.25,1)}
 @keyframes slideNext{from{transform:translateX(28px);opacity:.3}to{transform:none;opacity:1}}
 @keyframes slidePrev{from{transform:translateX(-28px);opacity:.3}to{transform:none;opacity:1}}
 .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -206,6 +206,64 @@ header>div:first-child{min-width:0}
 .pips{display:flex;gap:3px}
 .pips i{width:7px;height:7px;border-radius:50%;background:var(--line-strong)}
 .pips i.on{background:var(--tc)}
+/* Transitions de vue */
+.wrap{touch-action:pan-y}
+#pane{view-transition-name:content;will-change:transform}
+header>div:first-child{view-transition-name:hero-text;flex:1}
+#tabWeek{view-transition-name:tab-w}#tabMonth{view-transition-name:tab-m}#tabBadges{view-transition-name:tab-b}
+::view-transition-old(hero-text),::view-transition-new(hero-text){width:100%;height:auto;object-fit:none;object-position:left top}
+#summary{view-transition-name:hero-sum}
+::view-transition-group(*){animation-duration:.36s;animation-timing-function:cubic-bezier(.25,.85,.25,1)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.22s}
+::view-transition-group(content){animation:none}
+::view-transition-old(content){animation:.34s cubic-bezier(.3,.6,.2,1) both vtOutL}
+::view-transition-new(content){animation:.36s cubic-bezier(.2,.8,.2,1) both vtInR}
+html[data-dir="prev"]::view-transition-old(content){animation-name:vtOutR}
+html[data-dir="prev"]::view-transition-new(content){animation-name:vtInL}
+html[data-dir="none"]::view-transition-old(content){animation-name:vtFadeOut}
+html[data-dir="none"]::view-transition-new(content){animation-name:vtFadeUp}
+::view-transition-old(hero-text){animation:.2s ease-in both vtTxtOut}
+::view-transition-new(hero-text){animation:.3s .06s cubic-bezier(.2,.8,.2,1) both vtTxtIn}
+::view-transition-group(hero-text){animation:none}
+@keyframes vtOutL{to{transform:translateX(-32%);opacity:0}}
+@keyframes vtOutR{to{transform:translateX(32%);opacity:0}}
+@keyframes vtInR{from{transform:translateX(32%);opacity:0}}
+@keyframes vtInL{from{transform:translateX(-32%);opacity:0}}
+@keyframes vtFadeOut{to{opacity:0;transform:scale(.98)}}
+@keyframes vtFadeUp{from{opacity:0;transform:translateY(14px)}}
+@keyframes vtTxtOut{to{opacity:0;transform:translateY(-8px)}}
+@keyframes vtTxtIn{from{opacity:0;transform:translateY(8px)}}
+
+/* Feuilles qui montent et descendent */
+dialog[open]{animation:sheetUp .36s cubic-bezier(.2,.9,.25,1)}
+dialog[open]::backdrop{animation:fadeIn .3s ease}
+dialog.closing{animation:sheetDown .21s cubic-bezier(.4,0,.8,.4) forwards}
+dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
+@keyframes sheetUp{from{transform:translateY(100%)}}
+@keyframes sheetDown{to{transform:translateY(100%)}}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes fadeOut{to{opacity:0}}
+
+/* Retours au toucher */
+.tabs button,.icon-btn,.plus,.primary,.danger,.day-item,.cell,.gear,.link,.seg button{transition:transform .15s ease,background-color .2s,color .2s}
+.tabs button:active,.icon-btn:active,.primary:active,.danger:active,.day-item:active,.cell:active,.seg button:active{transform:scale(.96)}
+.plus:active,.gear:active{transform:scale(.88)}
+.check:active{transform:scale(.9)}
+.check{transition:background .2s,transform .15s}
+.sess .title{transition:color .3s}
+
+/* Message en bas */
+.save-state{transform:translate(-50%,12px);transition:opacity .25s,transform .35s cubic-bezier(.2,.9,.3,1.3)}
+.save-state.show{transform:translate(-50%,0)}
+
+/* Remplissages qui s’animent */
+.track.month i{transition:width .5s cubic-bezier(.25,.8,.25,1)}
+.b-bar i{transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*55ms + .12s)}
+.badge{animation:rise .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*45ms)}
+.badge .medal{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i,0)*45ms + .1s)}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+@media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -227,14 +285,17 @@ header>div:first-child{min-width:0}
   </div>
 
   <div class="tabs" role="group" aria-label="Affichage">
+    <span class="tab-ind" aria-hidden="true"></span>
     <button id="tabWeek" aria-pressed="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Ma semaine</span></button>
     <button id="tabMonth" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M9.2 9.5v11M14.8 9.5v11M3.5 15h17"/></svg><span>Mois</span></button>
     <button id="tabBadges" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l2.5 6M16 3l-2.5 6"/><circle cx="12" cy="15" r="6"/><path d="M12 12.5l.9 1.8 2 .3-1.45 1.4.35 2-1.8-1-1.8 1 .35-2-1.45-1.4 2-.3z" fill="currentColor" stroke="none"/></svg><span>Badges</span></button>
   </div>
 
+  <div id="pane">
   <div id="days"></div>
   <div id="footer"></div>
   <div class="settings"><button class="gear" id="gear"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Semaine type</span></button></div>
+  </div>
 </div>
 <div class="save-state" id="saveState">Enregistré</div>
 
@@ -390,13 +451,19 @@ document.getElementById("form").addEventListener("submit",e=>{
   const num=v=>v===""?null:Math.max(0,parseFloat(String(v).replace(",",".")))||null;
   const data={type:fType,title:document.getElementById("fTitle").value.trim()||(fType==="run"?"Course":"Renforcement"),km:fType==="run"?num(document.getElementById("fKm").value):null,min:num(document.getElementById("fMin").value),notes:document.getElementById("fNotes").value.trim()};
   if(editing.id){Object.assign(list.find(x=>x.id===editing.id),data)}else{list.push({id:uid(),done:false,...data})}
-  dlg.close();render();queueSave(true);
+  closeSheet(dlg);render();queueSave(true);
 });
 document.getElementById("del").addEventListener("click",()=>{
   const list=weekDays()[editing.dayIdx];const i=list.findIndex(x=>x.id===editing.id);
-  if(i>=0)list.splice(i,1);dlg.close();render();queueSave(true);
+  if(i>=0)list.splice(i,1);closeSheet(dlg);render();queueSave(true);
 });
-dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+dlg.addEventListener("click",e=>{if(e.target===dlg)closeSheet(dlg)});
+function closeSheet(d){
+  if(!d.open||d.classList.contains("closing"))return;
+  if(REDUCED()){d.close();return}
+  d.classList.add("closing");
+  setTimeout(()=>{d.classList.remove("closing");d.close()},210);
+}
 const dayDlg=document.getElementById("dayDlg");
 let dayIdx=0;
 function openDay(i){
@@ -406,7 +473,7 @@ function openDay(i){
   document.getElementById("dayTitle").textContent=DAYS[i];
   const box=document.getElementById("dayList");box.replaceChildren();
   list.forEach(s=>{
-    const b=el("button",{type:"button",class:"day-item","data-type":s.type,onclick:()=>{dayDlg.close();openEdit(i,s.id)}},
+    const b=el("button",{type:"button",class:"day-item","data-type":s.type,onclick:()=>{closeSheet(dayDlg);openEdit(i,s.id)}},
       el("i",{class:"dot "+s.type+(s.done&&mode==="week"?" ok":"")}),
       el("span",{class:"di-text"},el("span",{class:"title"},s.title),el("span",{class:"meta"},fmtMeta(s)||"Aucun détail")),
       el("span",{class:"di-go","aria-hidden":"true"},"›"));
@@ -414,8 +481,8 @@ function openDay(i){
   });
   dayDlg.showModal();
 }
-document.getElementById("dayAdd").onclick=()=>{dayDlg.close();openEdit(dayIdx,null)};
-dayDlg.addEventListener("click",e=>{if(e.target===dayDlg)dayDlg.close()});
+document.getElementById("dayAdd").onclick=()=>{closeSheet(dayDlg);openEdit(dayIdx,null)};
+dayDlg.addEventListener("click",e=>{if(e.target===dayDlg)closeSheet(dayDlg)});
 
 function updateTabs(){
   document.getElementById("tabWeek").setAttribute("aria-pressed",mode==="week");
@@ -489,20 +556,57 @@ function renderMonth(){
   const foot=document.getElementById("footer");foot.replaceChildren();
   if(monthOffset!==0)foot.append(el("button",{class:"link",onclick:()=>{monthOffset=0;render()}},"Revenir à ce mois"));
 }
+const REDUCED=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
+let busy=false;
+function animate(dir,update){
+  const pane=document.getElementById("pane");
+  const done=()=>{pane.style.transition="";pane.style.transform="";pane.style.opacity=""};
+  if(REDUCED()){update();done();return}
+  if(document.startViewTransition){
+    if(busy){update();done();return}
+    busy=true;
+    document.documentElement.dataset.dir=dir>0?"next":dir<0?"prev":"none";
+    const vt=document.startViewTransition(()=>{update();done();window.scrollTo(0,0)});
+    vt.finished.finally(()=>{busy=false});
+    return;
+  }
+  update();done();window.scrollTo(0,0);
+  if(dir){pane.classList.remove("slide-next","slide-prev");void pane.offsetWidth;pane.classList.add(dir>0?"slide-next":"slide-prev")}
+}
 function go(dir){
-  if(mode==="tpl")return;
-  if(mode==="month")monthOffset+=dir;else weekOffset+=dir;
-  render();
-  const d=document.getElementById("days");
-  d.classList.remove("slide-next","slide-prev");void d.offsetWidth;d.classList.add(dir>0?"slide-next":"slide-prev");
+  if(mode==="tpl"||mode==="badges")return;
+  animate(dir,()=>{if(mode==="month")monthOffset+=dir;else weekOffset+=dir;render()});
 }
 document.getElementById("prev").onclick=()=>go(-1);
 document.getElementById("next").onclick=()=>go(1);
-(()=>{let x0=null,y0=0;const area=document.querySelector(".wrap");
-  area.addEventListener("touchstart",e=>{if(e.touches.length!==1){x0=null;return}x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
-  area.addEventListener("touchend",e=>{if(x0===null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;
-    if(document.querySelector("dialog[open]")||mode==="tpl")return;
-    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6){const i=TABS.indexOf(mode)+(dx<0?1:-1);if(i>=0&&i<TABS.length)switchTab(TABS[i])}},{passive:true});
+(()=>{
+  const area=document.querySelector(".wrap"),pane=document.getElementById("pane");
+  let x0=null,y0=0,dx=0,axis=null,t0=0;
+  area.addEventListener("touchstart",e=>{
+    if(e.touches.length!==1||mode==="tpl"||busy||document.querySelector("dialog[open]")){x0=null;return}
+    x0=e.touches[0].clientX;y0=e.touches[0].clientY;dx=0;axis=null;t0=performance.now();pane.style.transition="none";
+  },{passive:true});
+  area.addEventListener("touchmove",e=>{
+    if(x0===null)return;
+    const x=e.touches[0].clientX-x0,y=e.touches[0].clientY-y0;
+    if(!axis&&(Math.abs(x)>8||Math.abs(y)>8))axis=Math.abs(x)>Math.abs(y)*1.2?"x":"y";
+    if(axis!=="x")return;
+    const i=TABS.indexOf(mode)+(x<0?1:-1),edge=i<0||i>=TABS.length;
+    dx=x;
+    const off=edge?x*.18:x*.55;
+    pane.style.transform="translateX("+off+"px)";
+    pane.style.opacity=String(1-Math.min(.35,Math.abs(off)/700));
+  },{passive:true});
+  const end=()=>{
+    if(x0===null)return;x0=null;
+    if(axis!=="x"){pane.style.transition="";return}
+    const v=Math.abs(dx)/Math.max(1,performance.now()-t0);
+    const i=TABS.indexOf(mode)+(dx<0?1:-1);
+    if((Math.abs(dx)>70||(v>.45&&Math.abs(dx)>30))&&i>=0&&i<TABS.length){pane.style.transition="";switchTab(TABS[i])}
+    else{pane.style.transition="transform .38s cubic-bezier(.2,.9,.3,1.25),opacity .3s";pane.style.transform="";pane.style.opacity="";setTimeout(()=>{pane.style.transition=""},400)}
+  };
+  area.addEventListener("touchend",end,{passive:true});
+  area.addEventListener("touchcancel",end,{passive:true});
 })();
 function todayLine(){
   const list=weekDays()[(new Date().getDay()+6)%7];
@@ -522,9 +626,7 @@ const TABS=["week","month","badges"];
 function switchTab(t){
   if(t===mode)return;
   const dir=TABS.indexOf(t)>TABS.indexOf(mode)?1:-1;
-  mode=t;render();window.scrollTo(0,0);
-  const d=document.getElementById("days");
-  d.classList.remove("slide-next","slide-prev");void d.offsetWidth;d.classList.add(dir>0?"slide-next":"slide-prev");
+  animate(dir,()=>{mode=t;render()});
 }
 const TIERS=["Bronze","Argent","Or","Platine","Légende"];
 const BADGES=[
@@ -579,12 +681,12 @@ function renderBadges(){
     const v=lv[k],val=st[b.id],next=b.steps[v],prevStep=v?b.steps[v-1]:0;
     const pct=v===5?100:Math.max(0,Math.min(100,(val-prevStep)/(next-prevStep)*100));
     const tierName=v?(b.names?b.names[v-1]:TIERS[v-1]):"À débloquer";
-    const row=el("div",{class:"badge t"+v});
+    const row=el("div",{class:"badge t"+v,style:"--i:"+k});
     const medal=el("div",{class:"medal","aria-hidden":"true"});
     medal.innerHTML=`<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${BICON[b.icon]}</svg>`;
     const info=el("div",{class:"b-info"});
     const top=el("div",{class:"b-top"},el("span",{class:"b-name"},b.name),el("span",{class:"b-tier"},tierName));
-    const bar=el("div",{class:"b-bar"});bar.append(el("i",{style:"width:"+pct+"%"}));
+    const bar=el("div",{class:"b-bar",style:"--i:"+k});bar.append(el("i",{style:"width:"+pct+"%"}));
     const pips=el("span",{class:"pips","aria-hidden":"true"});for(let j=0;j<5;j++)pips.append(el("i",{class:j<v?"on":""}));
     const foot=el("div",{class:"b-foot"},el("span",{},v===5?"Niveau maximum atteint":fmtN(val)+" / "+fmtN(next)+" "+b.unit),pips);
     info.append(top,bar,foot);
@@ -649,8 +751,8 @@ document.getElementById("tabWeek").onclick=()=>switchTab("week");
 document.getElementById("tabMonth").onclick=()=>switchTab("month");
 document.getElementById("tabBadges").onclick=()=>switchTab("badges");
 let backMode="week";
-document.getElementById("gear").onclick=()=>{backMode=mode;mode="tpl";render();window.scrollTo(0,0)};
-document.getElementById("closeTpl").onclick=()=>{mode=backMode;render();window.scrollTo(0,0)};
+document.getElementById("gear").onclick=()=>{backMode=mode;animate(0,()=>{mode="tpl";render()})};
+document.getElementById("closeTpl").onclick=()=>{animate(0,()=>{mode=backMode;render()})};
 
 // Sauvegarde : base de données de l’artifact si disponible, sinon ce navigateur
 const LS="planning-course-v1";
