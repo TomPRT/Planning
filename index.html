@@ -354,6 +354,47 @@ button.badge:active{transform:scale(.98)}
 .l-bar{position:absolute;left:52px;right:12px;bottom:7px;height:4px;border-radius:2px;background:var(--line)}
 .l-bar i{display:block;height:100%;border-radius:2px;background:var(--tc);transform-origin:left;animation:grow .8s cubic-bezier(.2,.8,.2,1) both .2s}
 #badgeDlg .sheet{max-height:88vh;overflow-y:auto}
+/* ===== Épuration ===== */
+.hero{padding:16px 20px 18px;border-radius:0 0 26px 26px}
+header{margin-bottom:16px}
+.sub{font-size:.9rem;margin-top:5px}
+.track{gap:4px;margin-bottom:10px}
+.track span{height:8px;border-radius:4px}
+.track.month i{border-radius:4px}
+.stats{justify-content:flex-start;gap:0;font-size:.88rem}
+.stats b{font-size:.95rem}
+.stats span+span::before{content:"·";margin:0 10px;color:var(--hero-muted);opacity:.6}
+.goal{padding:10px 14px;margin-top:14px;border-radius:14px;gap:10px;border-color:transparent}
+.g-ico{width:28px;height:28px}
+.g-ico svg{width:15px;height:15px}
+.g-txt b{font-weight:500;font-size:.95rem}
+.g-big{font-size:1.3rem}
+.tabs{margin:14px 0 14px;padding:3px;border-color:transparent;background:var(--line)}
+.tab-ind{top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/4);background:var(--surface);box-shadow:0 1px 3px rgba(19,32,58,.12)}
+.tabs button{flex-direction:row;font-size:.84rem;padding:8px 2px}
+.tabs button[aria-pressed="true"]{color:var(--ink)}
+.week{border-color:transparent;border-radius:18px}
+.week.gold{border-color:var(--gold)}
+.day{border-top-color:var(--bg)}
+.day-head{padding-top:10px;padding-bottom:10px}
+.sess + .sess{border-top:0}
+.meta{font-size:.82rem}
+.plus{color:var(--line-strong);width:42px}
+.plus:active{color:var(--muted)}
+.rest{font-style:normal;color:var(--rest)}
+.cell{border-radius:10px}
+.legend.below{justify-content:center;gap:16px;font-size:.8rem}
+.card,.tile,.badge{border-color:transparent}
+.tile{padding:12px 14px}
+.t-l{font-size:.78rem}
+.t-v{font-size:1.55rem;margin-top:2px}
+.badge{padding:12px 14px}
+.medal{width:46px;height:46px;border-width:2.5px}
+.medal svg{width:21px;height:21px}
+.b-bar{height:5px;margin:8px 0 5px}
+.settings{margin-top:22px;opacity:.85}
+#footer:empty{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab-ind{box-shadow:none;background:var(--surface)}:root:not([data-theme="light"]) .tabs{background:var(--surface);}:root:not([data-theme="light"]) .tab-ind{background:var(--line-strong)}}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -378,10 +419,10 @@ button.badge:active{transform:scale(.98)}
   <button class="goal" id="goalBar" hidden></button>
   <div class="tabs" role="group" aria-label="Affichage">
     <span class="tab-ind" aria-hidden="true"></span>
-    <button id="tabWeek" aria-pressed="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Ma semaine</span></button>
-    <button id="tabMonth" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M9.2 9.5v11M14.8 9.5v11M3.5 15h17"/></svg><span>Mois</span></button>
-    <button id="tabStats" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V12M10 20V5M15 20v-9M20 20V8"/></svg><span>Stats</span></button>
-    <button id="tabBadges" aria-pressed="false"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l2.5 6M16 3l-2.5 6"/><circle cx="12" cy="15" r="6"/><path d="M12 12.5l.9 1.8 2 .3-1.45 1.4.35 2-1.8-1-1.8 1 .35-2-1.45-1.4 2-.3z" fill="currentColor" stroke="none"/></svg><span>Badges</span></button>
+    <button id="tabWeek" aria-pressed="true"><span>Ma semaine</span></button>
+    <button id="tabMonth" aria-pressed="false"><span>Mois</span></button>
+    <button id="tabStats" aria-pressed="false"><span>Stats</span></button>
+    <button id="tabBadges" aria-pressed="false"><span>Badges</span></button>
   </div>
 
   <div id="pane">
@@ -506,7 +547,7 @@ function toggleSess(s,d,patch){
   announceBadges(b0);
 }
 function fmtMeta(s){
-  if(s.done&&s.type==="run"&&s.akm!=null){const p=[fmtN(s.akm)+" km"];if(s.amin)p.push(fmtDur(s.amin));const pc=fmtPace(s.akm,s.amin);if(pc)p.push(pc+" /km");return p.join(" · ")}const p=[];if(s.type==="run"&&s.km)p.push(String(s.km).replace(".",",")+" km");if(s.min)p.push(s.min+" min");if(s.notes)p.push(s.notes);return p.join(", ")}
+  if(s.done&&s.type==="run"&&s.akm!=null){const p=[fmtN(s.akm)+" km"];if(s.amin)p.push(fmtDur(s.amin));const pc=fmtPace(s.akm,s.amin);if(pc)p.push(pc+" /km");return p.join(" · ")}const p=[];if(s.type==="run"&&s.km)p.push(String(s.km).replace(".",",")+" km");if(s.min)p.push(fmtDur(s.min));return p.join(" · ")}
 function el(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v!==null&&v!==undefined)e.setAttribute(k,v)}for(const c of kids){if(c!=null)e.append(c)}return e}
 const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--surface)"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
 
@@ -540,7 +581,6 @@ function render(){
     st.innerHTML=`${done===all.length?'<span class="gold-txt"><b>★ Semaine parfaite</b></span>':`<span><b>${done}/${all.length}</b> séances faites</span>`}<span><b>${f(kmDone)}</b> / ${f(kmPlan)} km</span>`;
     summary.append(track,st);
   }else if(mode==="tpl"){
-    summary.append(el("p",{class:"note"},"Les changements ici s’appliquent aux semaines que tu n’as pas encore ouvertes. Pour une semaine déjà créée, utilise « Repartir de la semaine type »."));
   }
 
   // Jours
@@ -568,11 +608,8 @@ function render(){
   });
 
   const foot=document.getElementById("footer");foot.replaceChildren();
-  if(mode==="week"){
-    foot.append(el("button",{class:"link",onclick:()=>{if(confirm("Remplacer cette semaine par ta semaine type ? Les séances cochées seront décochées.")){state.weeks[keyOf(currentMonday())]=cloneTpl();render();queueSave(true)}}},"Repartir de la semaine type"));
-    if(weekOffset!==0)foot.append(el("br"),el("button",{class:"link",onclick:()=>{weekOffset=0;render()}},"Revenir à cette semaine"));
-  }
-}
+  if(mode==="week"&&weekOffset!==0)foot.append(el("button",{class:"link",onclick:()=>go(-weekOffset)},"Revenir à cette semaine"));
+  if(mode==="tpl"){const m=currentMonday();foot.append(el("button",{class:"link",onclick:()=>{if(confirm("Remplacer la semaine du "+m.getDate()+" "+MONTHS[m.getMonth()]+" par ta semaine type ? Les séances cochées seront décochées.")){state.weeks[keyOf(m)]=cloneTpl();queueSave(true);toast("Semaine mise à jour")}}},"Appliquer à la semaine du "+m.getDate()+" "+MONTHS[m.getMonth()]))}}
 
 // Édition
 const dlg=document.getElementById("dlg");
@@ -676,7 +713,7 @@ function renderMonth(){
   const mp=total>0&&done===total;
   st.innerHTML=`${mp?'<span class="gold-txt"><b>★ Mois parfait</b></span>':`<span><b>${done}/${total}</b> séances faites</span>`}<span><b>${(Math.round(km*10)/10).toString().replace(".",",")}</b> km courus</span>`;
   const lg=el("div",{class:"legend"});
-  lg.innerHTML=`<span><i class="dot run ok"></i>Course faite</span><span><i class="dot renfo ok"></i>Renfo fait</span><span><i class="dot run"></i>Prévue</span><span><i class="dot run miss"></i>Manquée</span><span><span class="star-l">★</span>Semaine parfaite</span>`;
+  lg.innerHTML=`<span><i class="dot run ok"></i>Fait</span><span><i class="dot run"></i>Prévu</span><span><span class="star-l">★</span>Semaine parfaite</span>`;
   const mt=el("div",{class:"track month"+(mp?" perfect":""),"aria-hidden":"true"});
   for(let w=mondayOf(first);w<=last;w.setDate(w.getDate()+7)){
     let a=0,b=0;
@@ -823,8 +860,8 @@ function renderGoal(){
   else{big="Fini";small="Touche pour définir un nouvel objectif"}
   bar.className="goal"+(days<=0?" live":"");
   bar.setAttribute("aria-label","Objectif "+g.name+" : "+big+", "+small+". Modifier");
-  bar.innerHTML=`<span class="g-ico">${'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>'}</span><span class="g-txt"><b></b><small></small></span><span class="g-big"></span><span class="g-bar"><i style="width:${pct}%"></i></span>`;
-  bar.querySelector("b").textContent=g.name;bar.querySelector("small").textContent=small;bar.querySelector(".g-big").textContent=big;
+  bar.innerHTML=`<span class="g-ico">${'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>'}</span><span class="g-txt"><b></b></span><span class="g-big"></span>`;
+  bar.querySelector("b").textContent=g.name;bar.querySelector(".g-big").textContent=big;
 }
 function openGoal(){
   const g=state.goal;
@@ -953,11 +990,12 @@ function renderStats(){
   const W=340,H=150,top=22,bot=22,gap=6,bw=(W-gap*(N-1))/N;
   let svg=`<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Kilomètres par semaine sur 12 semaines">`;
   [0.5,1].forEach(f=>{const y=top+(H-top-bot)*(1-f);svg+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" class="grid"/>`});
+  let maxDone=false;
   weeks.forEach((w,i)=>{
     const bh=Math.max(w.km?4:2,(H-top-bot)*w.km/maxKm),x=i*(bw+gap),y=H-bot-bh;
     const isCur=i===N-1,cls=w.perfect?"bar gold":isCur?"bar cur":"bar";
     svg+=`<rect class="${cls}" style="--i:${i}" x="${x}" y="${y}" width="${bw}" height="${bh}" rx="4"/>`;
-    if((isCur||w.km===maxKm)&&w.km)svg+=`<text class="val" x="${x+bw/2}" y="${y-6}" text-anchor="middle">${fmtN(w.km)}</text>`;
+    const showV=isCur||(w.km===maxKm&&!maxDone&&(maxDone=true));if(showV&&w.km)svg+=`<text class="val" x="${x+bw/2}" y="${y-6}" text-anchor="middle">${fmtN(w.km)}</text>`;
     if(i%3===2||isCur)svg+=`<text class="lab" x="${x+bw/2}" y="${H-6}" text-anchor="middle">${isCur?"Cette sem.":w.mon.getDate()+" "+MONTHS[w.mon.getMonth()]}</text>`;
   });
   svg+=`</svg>`;
@@ -969,7 +1007,7 @@ function renderStats(){
   const reg=totPlan?Math.round(totDone/totPlan*100):0;
   const tiles=[["Total",fmtN(all.km)+" km","courus depuis le début"],["Plus longue",fmtN(all.long)+" km","sortie record"],["Meilleure semaine",fmtN(best)+" km","ton record hebdo"],["Temps total",fmtDur(allMin),"d’entraînement depuis le début"],["Allure moyenne",pk?fmtPace(pk,pm)+" /km":"–","sur tes courses saisies"],["Meilleure allure",bestPace?fmtPace(1,bestPace)+" /km":"–","sortie de 3 km ou plus"]];
   const grid=el("div",{class:"tiles"});
-  tiles.forEach(([a,b,c],i)=>{const t=el("div",{class:"tile",style:"--i:"+i});t.append(el("span",{class:"t-l"},a),el("span",{class:"t-v"},b),el("span",{class:"t-s"},c));grid.append(t)});
+  tiles.forEach(([a,b,c],i)=>{const t=el("div",{class:"tile",style:"--i:"+i});t.append(el("span",{class:"t-l"},a),el("span",{class:"t-v"},b));grid.append(t)});
   box.append(grid);
   // Répartition
   const tot=runs+renfos,rp=tot?Math.round(runs/tot*100):50;
@@ -977,7 +1015,6 @@ function renderStats(){
   split.innerHTML=`<div class="card-h"><span>Répartition</span><span class="muted">${tot} séances</span></div>
     <div class="split" role="img" aria-label="${runs} courses et ${renfos} renforcements"><i class="r" style="width:${tot?rp:50}%"></i><i class="f" style="width:${tot?100-rp:50}%"></i></div>
     <div class="split-l"><span><i class="dot run ok"></i>Course · ${runs}</span><span><i class="dot renfo ok"></i>Renfo · ${renfos}</span></div>`;
-  box.append(split);
   const daysEl=document.getElementById("days");daysEl.className="";daysEl.replaceChildren(box);
   document.getElementById("footer").replaceChildren();
 }
@@ -1004,7 +1041,7 @@ function renderBadges(){
     const top=el("div",{class:"b-top"},el("span",{class:"b-name"},b.name),el("span",{class:"b-tier"},tierName));
     const bar=el("div",{class:"b-bar",style:"--i:"+k});bar.append(el("i",{style:"width:"+pct+"%"}));
     const pips=el("span",{class:"pips","aria-hidden":"true"});for(let j=0;j<5;j++)pips.append(el("i",{class:j<v?"on":""}));
-    const foot=el("div",{class:"b-foot"},el("span",{},v===5?"Niveau maximum atteint":fmtN(val)+" / "+fmtN(next)+" "+b.unit),pips);
+    const foot=el("div",{class:"b-foot"},el("span",{},v===5?"Niveau maximum atteint":fmtN(val)+" / "+fmtN(next)+" "+b.unit));
     info.append(top,bar,foot);
     row.setAttribute("aria-label",b.name+" : "+tierName+", "+(v===5?"niveau maximum":fmtN(val)+" sur "+fmtN(next)+" "+b.unit));
     row.append(medal,info);list.append(row);
