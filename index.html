@@ -43,7 +43,7 @@
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hero);z-index:10}
 button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--run);outline-offset:2px}
@@ -52,7 +52,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 /* Bandeau : le seul élément fort de la page, aux couleurs de l’icône */
 .hero{background:var(--hero);color:var(--hero-ink);margin:0 -14px;padding:14px 18px 16px;border-radius:0 0 22px 22px}
 header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 14px}
-.range{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:2.5rem;line-height:.95;letter-spacing:-.005em;margin:0}
+.range{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:2.5rem;line-height:.95;letter-spacing:-.005em;margin:0}
 .sub{color:var(--hero-muted);font-size:.95rem;margin:6px 0 0}
 .nav{display:flex;gap:8px;padding-top:2px}
 .icon-btn{width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--hero-ink);display:grid;place-items:center;font-size:1.35rem;line-height:1;padding:0 0 2px}
@@ -86,7 +86,7 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:12p
 .day:first-child{border-top:0}
 .day.today{background:var(--today);box-shadow:inset 4px 0 0 var(--run)}
 .day-head{flex:none;width:70px;display:flex;flex-direction:column;justify-content:center;padding:8px 0 8px 14px}
-.day-name{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.35rem;line-height:1.05}
+.day-name{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.35rem;line-height:1.05}
 .day.today .day-name{color:var(--run)}
 .day-date{color:var(--muted);font-size:.82rem;line-height:1.2}
 .day-body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
@@ -120,7 +120,7 @@ dialog{border:0;padding:0;margin:auto auto 0;width:100%;max-width:560px;border-r
 dialog::backdrop{background:rgba(8,13,25,.5)}
 .sheet{padding:10px 18px calc(18px + env(safe-area-inset-bottom,0px))}
 .sheet::before{content:"";display:block;width:38px;height:5px;border-radius:3px;background:var(--line-strong);margin:0 auto 14px}
-.sheet h2{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:1.7rem;margin:0 0 14px}
+.sheet h2{font-family:"Barlow Condensed",sans-serif;font-size:1.7rem;margin:0 0 14px}
 .seg{display:flex;gap:8px;margin-bottom:16px}
 .seg button{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--line-strong);background:none;font-weight:600}
 .seg button[aria-pressed="true"][data-v="run"]{border-color:var(--run);background:var(--run-soft);color:var(--run)}
@@ -144,7 +144,7 @@ textarea{min-height:70px;resize:vertical}
 .cell.out{opacity:.35}
 .cell.today{border-color:var(--run)}
 .cell.today .n{color:var(--run)}
-.cell .n{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.1rem;line-height:1}
+.cell .n{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.1rem;line-height:1}
 .dots{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
 .dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--c);display:grid;place-items:center}
 .dot.run{--c:var(--run)}.dot.renfo{--c:var(--renfo)}
@@ -183,7 +183,7 @@ header>div:first-child{min-width:0}
 .month-win.out{opacity:0;transition:opacity .35s}
 .mw-card{background:var(--hero);color:var(--hero-ink);border:2px solid var(--hero-gold);border-radius:24px;padding:26px 28px 24px;text-align:center;max-width:300px;animation:mwPop .55s cubic-bezier(.2,1.15,.4,1)}
 .mw-medal{color:var(--hero-gold);display:grid;place-items:center;margin-bottom:8px;animation:mwSpin 1s ease-out}
-.mw-title{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:2.4rem;line-height:1;color:var(--hero-gold)}
+.mw-title{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:2.4rem;line-height:1;color:var(--hero-gold)}
 .mw-sub{color:var(--hero-muted);margin-top:8px;font-size:.95rem}
 @keyframes mwIn{from{opacity:0}to{opacity:1}}
 @keyframes mwPop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
@@ -273,7 +273,7 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
 /* Jour de la séance */
 .field-l{font-size:.88rem;font-weight:500;color:var(--muted);margin-bottom:6px}
 .daypick{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:14px}
-.daypick button{border:1.5px solid var(--line-strong);background:none;border-radius:10px;padding:9px 0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.05rem;color:var(--muted);transition:transform .15s,background-color .2s,color .2s,border-color .2s}
+.daypick button{border:1.5px solid var(--line-strong);background:none;border-radius:10px;padding:9px 0;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.05rem;color:var(--muted);transition:transform .15s,background-color .2s,color .2s,border-color .2s}
 .daypick button[aria-pressed="true"]{background:var(--hero);border-color:var(--hero);color:var(--hero-ink)}
 .daypick button:active{transform:scale(.92)}
 
@@ -284,7 +284,7 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
 .g-txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .g-txt b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .g-txt small{color:var(--muted);font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.g-big{flex:none;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.8rem;line-height:1;color:var(--run)}
+.g-big{flex:none;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.8rem;line-height:1;color:var(--run)}
 .g-bar{position:absolute;left:14px;right:14px;bottom:7px;height:4px;border-radius:2px;background:var(--line)}
 .g-bar i{display:block;height:100%;border-radius:2px;background:var(--run);transition:width .6s cubic-bezier(.25,.8,.25,1)}
 .goal.live{border-color:var(--run);box-shadow:0 0 0 2px var(--run)}
@@ -305,13 +305,13 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
 .chart .bar{fill:var(--run);opacity:.45;transform-box:fill-box;transform-origin:bottom;animation:barUp .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*35ms)}
 .chart .bar.cur{opacity:1}
 .chart .bar.gold{fill:var(--gold);opacity:1}
-.chart .val{font:600 11px "Barlow",system-ui,sans-serif;fill:var(--ink)}
-.chart .lab{font:500 10px "Barlow",system-ui,sans-serif;fill:var(--muted)}
+.chart .val{font:600 11px "Barlow",sans-serif;fill:var(--ink)}
+.chart .lab{font:500 10px "Barlow",sans-serif;fill:var(--muted)}
 @keyframes barUp{from{transform:scaleY(0)}}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;animation:rise .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*40ms + .1s)}
 .t-l{color:var(--muted);font-size:.8rem;font-weight:500}
-.t-v{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.6rem;line-height:1.1}
+.t-v{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.6rem;line-height:1.1}
 .t-s{color:var(--muted);font-size:.74rem}
 .split{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:3px}
 .split i{display:block;height:100%;border-radius:6px;transform-origin:left;animation:grow .8s cubic-bezier(.2,.8,.2,1) both .15s}
@@ -322,7 +322,7 @@ dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
 /* Séance faite */
 .done-sub{color:var(--muted);margin:-8px 0 14px;font-size:.92rem}
 .pace{display:flex;flex-direction:column;align-items:center;background:var(--run-soft);border-radius:14px;padding:12px;margin:2px 0 14px}
-.pace-v{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:2.2rem;line-height:1;color:var(--run)}
+.pace-v{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:2.2rem;line-height:1;color:var(--run)}
 .pace-l{color:var(--muted);font-size:.82rem;margin-top:2px}
 .ghost{padding:13px 14px;border:1px solid var(--line-strong);border-radius:12px;background:none;font-weight:600;color:var(--ink)}
 .ghost:active{transform:scale(.96)}
@@ -339,13 +339,13 @@ button.badge:active{transform:scale(.98)}
 .bd-tier.t0{color:var(--muted)}
 .bd-desc{color:var(--muted);font-size:.9rem;margin:0 0 12px}
 .bd-now{display:flex;align-items:baseline;gap:8px}
-.bd-val{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:2.6rem;line-height:1}
+.bd-val{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:2.6rem;line-height:1}
 .bd-unit{color:var(--muted)}
 .bd-next{margin:4px 0 14px;font-weight:500}
 .lvls{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:6px}
 .lvl{position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
 .lvl:nth-child(2){animation-delay:.04s}.lvl:nth-child(3){animation-delay:.08s}.lvl:nth-child(4){animation-delay:.12s}.lvl:nth-child(5){animation-delay:.16s}
-.l-dot{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 .85rem "Barlow Condensed","Arial Narrow",sans-serif;border:2px solid var(--tc);color:var(--tc)}
+.l-dot{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 .85rem "Barlow Condensed",sans-serif;border:2px solid var(--tc);color:var(--tc)}
 .lvl.got .l-dot{background:var(--tc);color:#fff}
 .lvl.lock{opacity:.55}
 .lvl.lock .l-dot{border-style:dashed}
@@ -410,7 +410,7 @@ header{margin-bottom:16px}
 [data-r="today"]:empty{display:none}
 .tcard{background:var(--surface);border-radius:18px;padding:14px 16px 8px;margin-bottom:10px}
 .tc-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.tc-h>span:first-child{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:1.35rem;color:var(--run)}
+.tc-h>span:first-child{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.35rem;color:var(--run)}
 .tc-date{color:var(--muted);font-size:.84rem}
 .tc-s{display:flex;align-items:center;gap:14px;padding:10px 0}
 .tc-s+.tc-s{border-top:1px solid var(--bg)}
@@ -702,13 +702,13 @@ html,body{overscroll-behavior-y:none}
 
 <dialog id="doneDlg">
   <form class="sheet" id="doneForm">
-    <h2>Bien joué !</h2>
+    <h2>Bien joué !</h2>
     <p class="done-sub" id="doneSub"></p>
     <div class="row">
       <label>Distance réelle (km)<input id="dKm" type="number" inputmode="decimal" min="0" step="0.01"></label>
       <label>Durée (min)<input id="dMin" type="number" inputmode="decimal" min="0" step="1"></label>
     </div>
-    <div class="pace"><span class="pace-v" id="dPace">–</span><span class="pace-l">allure moyenne par km</span></div>
+    <div class="pace"><span class="pace-v" id="dPace">…</span><span class="pace-l">allure moyenne par km</span></div>
     <div class="actions">
       <button type="button" class="ghost" id="dSkip">Garder le prévu</button>
       <button type="submit" class="primary">Valider</button>
@@ -804,7 +804,7 @@ const TICON={
   dumb:'<path d="M6.5 7v10M17.5 7v10M3.5 10v4M20.5 10v4M6.5 12h11"/>'};
 function typeKey(s){if(s.type==="renfo")return "dumb";const t=(s.title||"").toLowerCase();if(/fraction|interval|vma|seuil|côte|cote|tempo|piste/.test(t))return "bolt";if(/longue|long|trail/.test(t))return "mount";return "shoe"}
 function makeCheck(s,d,big){
-  const c=el("button",{class:"check"+(big?" big":""),"aria-label":(s.done?"Marquer non faite : ":"Marquer faite : ")+s.title,"aria-pressed":s.done,onclick:()=>{if(!s.done&&s.type==="run")openDone(s,patch=>toggleSess(s,d,patch));else toggleSess(s,d)}});
+  const c=el("button",{class:"check"+(big?" big":""),"aria-label":(s.done?"Marquer non faite : ":"Marquer faite : ")+s.title,"aria-pressed":s.done,onclick:()=>{if(!s.done&&s.type==="run")openDone(s,patch=>toggleSess(s,d,patch));else toggleSess(s,d)}});
   c.innerHTML='<svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+TICON[typeKey(s)]+'</svg>'+CHECK;
   return c;
 }
@@ -905,7 +905,7 @@ function renderInner(){
   const range=document.getElementById("range"),sub=document.getElementById("sub");
   if(mode==="tpl"){range.textContent="Semaine type";sub.textContent="Base utilisée pour chaque nouvelle semaine"}
   else{
-    range.textContent=mon.getDate()+(mon.getMonth()!==sun.getMonth()?" "+MONTHS[mon.getMonth()]:"")+" – "+sun.getDate()+" "+MONTHS[sun.getMonth()];
+    range.textContent=mon.getDate()+(mon.getMonth()!==sun.getMonth()?" "+MONTHS[mon.getMonth()]:"")+" au "+sun.getDate()+" "+MONTHS[sun.getMonth()];
     sub.textContent=weekOffset===0?"Cette semaine":weekOffset===1?"Semaine prochaine":weekOffset===-1?"Semaine dernière":(weekOffset>0?"Dans "+weekOffset+" semaines":"Il y a "+(-weekOffset)+" semaines");
   }
 
@@ -935,7 +935,7 @@ function renderInner(){
     card.append(el("div",{class:"tc-h"},el("span",{},"Aujourd’hui"),el("span",{class:"tc-date"},td.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"}))));
     if(!list.length){
       let nx=null;for(let j=ti+1;j<7&&!nx;j++)if(days[j].length)nx=[j,days[j][0]];
-      card.append(el("div",{class:"tc-rest"},el("span",{class:"tc-rest-t"},"Repos"),el("span",{class:"tc-rest-s"},nx?"Prochaine séance : "+DAYS[nx[0]].toLowerCase()+" · "+nx[1].title+(nx[1].type==="run"&&nx[1].km?" "+fmtN(nx[1].km)+" km":""):"Profite, ta semaine est bouclée")));
+      card.append(el("div",{class:"tc-rest"},el("span",{class:"tc-rest-t"},"Repos"),el("span",{class:"tc-rest-s"},nx?"Prochaine séance : "+DAYS[nx[0]].toLowerCase()+" · "+nx[1].title+(nx[1].type==="run"&&nx[1].km?" "+fmtN(nx[1].km)+" km":""):"Profite, ta semaine est bouclée")));
     }else list.forEach(s=>{
       const row=el("div",{class:"tc-s sess"+(s.done?" done":"")+(s.id===lastToggled?" just":""),"data-type":s.type});
       row.append(makeCheck(s,td,true));
@@ -971,7 +971,7 @@ function renderInner(){
 
   const foot=document.getElementById("footer");foot.replaceChildren();
   if(mode==="week"&&weekOffset!==0)foot.append(el("button",{class:"link",onclick:()=>go(-weekOffset)},"Revenir à cette semaine"));
-  if(mode==="tpl"){const m=currentMonday();foot.append(el("button",{class:"link",onclick:()=>{if(confirm("Remplacer la semaine du "+m.getDate()+" "+MONTHS[m.getMonth()]+" par ta semaine type ? Les séances cochées seront décochées.")){state.weeks[keyOf(m)]=cloneTpl();queueSave(true);toast("Semaine mise à jour")}}},"Appliquer à la semaine du "+m.getDate()+" "+MONTHS[m.getMonth()]))}}
+  if(mode==="tpl"){const m=currentMonday();foot.append(el("button",{class:"link",onclick:()=>{if(confirm("Remplacer la semaine du "+m.getDate()+" "+MONTHS[m.getMonth()]+" par ta semaine type ? Les séances cochées seront décochées.")){state.weeks[keyOf(m)]=cloneTpl();queueSave(true);toast("Semaine mise à jour")}}},"Appliquer à la semaine du "+m.getDate()+" "+MONTHS[m.getMonth()]))}}
 
 // Édition
 const dlg=document.getElementById("dlg");
@@ -1092,7 +1092,7 @@ function renderMonth(){
   const last=new Date(y,m+1,0);
   const name=MONTHS_FULL[m];
   document.getElementById("range").textContent=name.charAt(0).toUpperCase()+name.slice(1)+" "+y;
-  const st0=streak();document.getElementById("sub").textContent=st0?"★ Série : "+st0+" semaine"+(st0>1?"s":"")+" parfaite"+(st0>1?"s":"")+" d’affilée":"Touche un jour pour ouvrir sa semaine";
+  const st0=streak();document.getElementById("sub").textContent=st0?"★ Série : "+st0+" semaine"+(st0>1?"s":"")+" parfaite"+(st0>1?"s":"")+" d’affilée":"Touche un jour pour ouvrir sa semaine";
 
   let done=0,total=0,km=0;
   for(let d=new Date(first);d<=last;d.setDate(d.getDate()+1)){
@@ -1160,10 +1160,10 @@ document.getElementById("prev").onclick=()=>go(-1);
 document.getElementById("next").onclick=()=>go(1);
 function todayLine(){
   const list=weekDays()[(new Date().getDay()+6)%7];
-  if(!list.length)return "Aujourd’hui : repos";
+  if(!list.length)return "Aujourd’hui : repos";
   const left=list.filter(s=>!s.done);
-  if(!left.length)return "Aujourd’hui : fait ✓";
-  return "Aujourd’hui : "+left.map(s=>s.title+(s.type==="run"&&s.km?" "+String(s.km).replace(".",",")+" km":"")).join(" + ");
+  if(!left.length)return "Aujourd’hui : fait";
+  return "Aujourd’hui : "+left.map(s=>s.title+(s.type==="run"&&s.km?" "+String(s.km).replace(".",",")+" km":"")).join(" + ");
 }
 function streak(){
   const d=mondayOf(new Date());
@@ -1196,7 +1196,7 @@ function backupDue(){return hasData()&&daysSince(state.lastBackup)>30}
 function updBackupDot(){const d=backupDue();document.getElementById("bkBtn").classList.toggle("due",d);document.getElementById("setBtn").classList.toggle("due",d)}
 function openBackup(){
   const d=daysSince(state.lastBackup);
-  document.getElementById("bkStatus").textContent=d===Infinity?"Aucune sauvegarde pour l’instant":d===0?"Dernière sauvegarde : aujourd’hui":d===1?"Dernière sauvegarde : hier":"Dernière sauvegarde : il y a "+d+" jours";
+  document.getElementById("bkStatus").textContent=d===Infinity?"Aucune sauvegarde pour l’instant":d===0?"Dernière sauvegarde : aujourd’hui":d===1?"Dernière sauvegarde : hier":"Dernière sauvegarde : il y a "+d+" jours";
   document.getElementById("bkStatus").classList.toggle("warn",backupDue());
   bkDlg.showModal();
 }
@@ -1221,7 +1221,7 @@ document.getElementById("bkFile").onchange=async e=>{
     const raw=JSON.parse(await f.text());const s=raw&&raw.state?raw.state:raw;
     if(!s||!Array.isArray(s.template)||s.template.length!==7||typeof s.weeks!=="object")throw 0;
     const n=Object.keys(s.weeks).length;
-    if(!confirm("Remplacer tes données actuelles par cette sauvegarde"+(raw.date?" du "+parseDay(raw.date).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}):"")+" ("+n+" semaine"+(n>1?"s":"")+") ?"))return;
+    if(!confirm("Remplacer tes données actuelles par cette sauvegarde"+(raw.date?" du "+parseDay(raw.date).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}):"")+" ("+n+" semaine"+(n>1?"s":"")+") ?"))return;
     state=s;closeSheet(bkDlg);render();queueSave(false);setTimeout(()=>toast("Sauvegarde restaurée"),250);
   }catch(err){toast("Ce fichier n’est pas une sauvegarde du planning")}
 };
@@ -1229,7 +1229,7 @@ document.getElementById("bdClose").onclick=()=>closeSheet(badgeDlg);
 badgeDlg.addEventListener("click",e=>{if(e.target===badgeDlg)closeSheet(badgeDlg)});
 let doneCb=null;
 function updPace(){const k=parseFloat(String(document.getElementById("dKm").value).replace(",",".")),m=parseFloat(String(document.getElementById("dMin").value).replace(",","."));
-  const p=fmtPace(k,m);document.getElementById("dPace").textContent=p?p+" /km":"–"}
+  const p=fmtPace(k,m);document.getElementById("dPace").textContent=p?p+" /km":"…"}
 function openDone(s,cb){
   doneCb=cb;
   document.getElementById("doneSub").textContent=s.title+(s.km?" · prévu "+fmtN(s.km)+" km"+(s.min?" en "+fmtDur(s.min):""):"");
@@ -1262,7 +1262,7 @@ function renderGoal(){
   let big,small;
   if(days>1){big="J-"+days;const w=Math.floor(days/7),r=days%7;small=dateTxt+" · "+(w?w+" sem."+(r?" "+r+" j":""):r+" jours")}
   else if(days===1){big="Demain";small=dateTxt+" · dernière ligne droite"}
-  else if(days===0){big="Jour J";small="C’est aujourd’hui, à toi de jouer !"}
+  else if(days===0){big="Jour J";small="C’est aujourd’hui, à toi de jouer !"}
   else{big="Fini";small="Touche pour définir un nouvel objectif"}
   bar.className="goal"+(days<=0?" live":"");
   bar.setAttribute("aria-label","Objectif "+g.name+" : "+big+", "+small+". Modifier");
@@ -1288,7 +1288,7 @@ document.getElementById("goalForm").addEventListener("submit",e=>{
   state.goal={name,date,created:old&&old.date===date?old.created:keyOf(new Date())};
   closeSheet(goalDlg);render();queueSave(true);
 });
-document.getElementById("gDel").onclick=()=>{if(confirm("Supprimer ton objectif ?")){delete state.goal;closeSheet(goalDlg);render();queueSave(true)}};
+document.getElementById("gDel").onclick=()=>{if(confirm("Supprimer ton objectif ?")){delete state.goal;closeSheet(goalDlg);render();queueSave(true)}};
 goalDlg.addEventListener("click",e=>{if(e.target===goalDlg)closeSheet(goalDlg)});
 function switchTab(t){
   if(mode==="tpl")return;
@@ -1306,7 +1306,7 @@ function openBadge(k){
   medal.innerHTML=`<span class="coin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${BICON[b.icon]}</svg></span>`;
   const head=el("div",{class:"bd-head"},medal,el("div",{},el("h2",{},b.name),el("div",{class:"bd-tier t"+v},v?"Niveau "+v+" · "+tn(v-1):"Pas encore débloqué")));
   const now=el("div",{class:"bd-now"},el("span",{class:"bd-val"},fmtN(val)),el("span",{class:"bd-unit"},b.unit));
-  let nextTxt="Tu as atteint le niveau maximum. Légende !";
+  let nextTxt="Niveau maximum atteint : le rang Légende.";
   if(v<5){const rest=Math.max(0,b.steps[v]-val);nextTxt="Encore "+fmtN(Math.round(rest*10)/10)+" "+b.unit+" pour "+tn(v)+"."}
   box.append(head,el("p",{class:"bd-desc"},BDESC[b.id]),now,el("p",{class:"bd-next"},nextTxt));
   const ul=el("ol",{class:"lvls"});
@@ -1357,7 +1357,7 @@ function announceBadges(before){
   const i=after.findIndex((v,k)=>v>before[k]);
   if(i<0)return;
   const b=BADGES[i],lv=after[i];
-  setTimeout(()=>toast("Nouveau badge : "+b.name+" · "+(b.names?b.names[lv-1]:TIERS[lv-1])),1500);
+  setTimeout(()=>toast("Nouveau badge : "+b.name+" · "+(b.names?b.names[lv-1]:TIERS[lv-1])),1500);
 }
 const fmtN=n=>(Math.round(n*10)/10).toLocaleString("fr-FR",{maximumFractionDigits:1});
 function fmtDur(min){min=Math.round(min);const hh=Math.floor(min/60),mm=min%60;return hh?hh+" h"+(mm?" "+String(mm).padStart(2,"0"):""):mm+" min"}
@@ -1412,7 +1412,7 @@ function renderStats(){
   box.append(chart);
   // Chiffres clés
   const reg=totPlan?Math.round(totDone/totPlan*100):0;
-  const tiles=[["Total",fmtN(all.km)+" km","courus depuis le début"],["Plus longue",fmtN(all.long)+" km","sortie record"],["Meilleure semaine",fmtN(best)+" km","ton record hebdo"],["Temps total",fmtDur(allMin),"d’entraînement depuis le début"],["Allure moyenne",pk?fmtPace(pk,pm)+" /km":"–","sur tes courses saisies"],["Meilleure allure",bestPace?fmtPace(1,bestPace)+" /km":"–","sortie de 3 km ou plus"]];
+  const tiles=[["Total",fmtN(all.km)+" km","courus depuis le début"],["Plus longue",fmtN(all.long)+" km","sortie record"],["Meilleure semaine",fmtN(best)+" km","ton record hebdo"],["Temps total",fmtDur(allMin),"d’entraînement depuis le début"],["Allure moyenne",pk?fmtPace(pk,pm)+" /km":"pas encore","sur tes courses saisies"],["Meilleure allure",bestPace?fmtPace(1,bestPace)+" /km":"pas encore","sortie de 3 km ou plus"]];
   const grid=el("div",{class:"tiles"});
   tiles.forEach(([a,b,c],i)=>{const t=el("div",{class:"tile",style:"--i:"+i});t.append(el("span",{class:"t-l"},a),el("span",{class:"t-v"},b));grid.append(t)});
   box.append(grid);
@@ -1481,7 +1481,7 @@ function celebrateMonth(d){
   const cols=[gold,gold,cs.getPropertyValue("--run").trim(),cs.getPropertyValue("--renfo").trim(),"#FFFFFF"];
   const name=MONTHS_FULL[d.getMonth()];
   const ov=el("div",{class:"month-win",role:"status"});
-  ov.innerHTML=`<div class="mw-card"><div class="mw-medal" aria-hidden="true"><svg viewBox="0 0 64 64" width="64" height="64"><path d="M22 4h8l4 14h-8zM42 4h-8l-4 14h8z" fill="currentColor" opacity=".55"/><circle cx="32" cy="38" r="20" fill="currentColor"/><path d="M32 27l3.4 6.9 7.6 1.1-5.5 5.4 1.3 7.6L32 44.4 25.2 48l1.3-7.6-5.5-5.4 7.6-1.1z" fill="var(--hero)"/></svg></div><div class="mw-title">Mois parfait</div><div class="mw-sub">Toutes tes séances de ${name} sont faites. Bravo !</div></div>`;
+  ov.innerHTML=`<div class="mw-card"><div class="mw-medal" aria-hidden="true"><svg viewBox="0 0 64 64" width="64" height="64"><path d="M22 4h8l4 14h-8zM42 4h-8l-4 14h8z" fill="currentColor" opacity=".55"/><circle cx="32" cy="38" r="20" fill="currentColor"/><path d="M32 27l3.4 6.9 7.6 1.1-5.5 5.4 1.3 7.6L32 44.4 25.2 48l1.3-7.6-5.5-5.4 7.6-1.1z" fill="var(--hero)"/></svg></div><div class="mw-title">Mois parfait</div><div class="mw-sub">Toutes tes séances de ${name} sont cochées.</div></div>`;
   ov.addEventListener("click",()=>close());
   document.body.append(ov);
   let closed=false;function close(){if(closed)return;closed=true;ov.classList.add("out");setTimeout(()=>ov.remove(),350)}
@@ -1491,7 +1491,7 @@ function celebrateMonth(d){
   burst(cv,[{x:0,y:1,angle:-1.1,spread:.6,power:17},{x:1,y:1,angle:-2.04,spread:.6,power:17},{x:.5,y:.38,angle:-Math.PI/2,spread:6.2,power:8,delay:350}],80,2800,cols).then(()=>cv.remove());
 }
 function celebrate(){
-  setTimeout(()=>toast("★ Semaine parfaite !"),700);
+  setTimeout(()=>toast("★ Semaine parfaite !"),700);
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const cs=getComputedStyle(document.documentElement);
   const cols=["--run","--renfo","--hero-gold"].map(v=>cs.getPropertyValue(v).trim());
@@ -1515,7 +1515,7 @@ let backMode="week";
 document.getElementById("gear").onclick=()=>{backMode=mode;animate(0,()=>{mode="tpl";render()})};
 document.getElementById("closeTpl").onclick=()=>{animate(0,()=>{mode=backMode;render()})};
 
-// Sauvegarde : base de données de l’artifact si disponible, sinon ce navigateur
+// Sauvegarde : base de données de l’artifact si disponible, sinon ce navigateur
 const LS="planning-course-v1";
 let dbDoc=null,saveTimer=null,ready=false;
 function toast(t){const s=document.getElementById("saveState");s.textContent=t;s.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>s.classList.remove("show"),1400)}
