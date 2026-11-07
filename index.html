@@ -549,7 +549,6 @@ dialog::backdrop{background:rgba(8,13,25,.45)}
 dialog.closing::backdrop{animation:fadeOut .26s ease forwards}
 
 /* Ouverture de l’app */
-body.launch .hero{animation:heroIn .8s var(--spring-soft) both}
 body.launch :is(.goal,.tabs,.panel.active [data-r="today"],.panel.active [data-r="days"]){animation:launchUp .7s var(--spring-soft) both}
 body.launch .goal{animation-delay:.08s}body.launch .tabs{animation-delay:.13s}body.launch .panel.active [data-r="today"]{animation-delay:.18s}body.launch .panel.active [data-r="days"]{animation-delay:.24s}
 @keyframes heroIn{from{transform:translateY(-24px);opacity:0}}
@@ -618,6 +617,7 @@ header{margin-bottom:10px}
 .icon-btn.set svg{display:block}
 .icon-btn.due::after{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--run);box-shadow:0 0 0 2px var(--hero)}
 .pager{margin-bottom:24px}
+html,body{overscroll-behavior-y:none}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -853,12 +853,7 @@ function render(){
   TABS.filter(t=>t!==real).concat(real).forEach(t=>{mode=t;assignIds(t);document.querySelector(".hero").classList.remove("gold");renderInner();heroCache[t]=snapHero()});
   mode=real;finishLayout();countUp();
 }
-function heroFade(){
-  if(REDUCED())return;
-  const o={duration:420,easing:"cubic-bezier(.25,.8,.3,1)"};
-  document.querySelector("header>div:first-child").animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],o);
-  document.getElementById("summary").animate([{opacity:0},{opacity:1}],o);
-}
+function heroFade(){}
 function setActive(t){
   if(t===mode)return;
   mode=t;const c=heroCache[t];
@@ -884,6 +879,8 @@ function settle(){
   if(t&&t!==mode&&mode!=="tpl")setActive(t);else finishLayout();
 }
 window.addEventListener("resize",()=>{scrolling=false;finishLayout()});
+if(window.ResizeObserver){const ro=new ResizeObserver(()=>fitHeight());document.querySelectorAll(".panel").forEach(p=>ro.observe(p))}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>fitHeight());
 function renderInner(){
   applyPrefs();
   updateTabs();
@@ -1034,12 +1031,13 @@ document.querySelectorAll("dialog").forEach(d=>{
   },{passive:false});
   const end=()=>{
     if(y0===null)return;y0=null;if(!drag)return;
+    setTimeout(()=>{drag=false},60);
     const v=dy/Math.max(1,performance.now()-t0);
     if(dy>110||(v>.5&&dy>30)){closeSheet(d)}
     else{d.style.transition="transform .55s var(--spring)";d.style.transform="";setTimeout(()=>{if(!d.classList.contains("closing"))d.style.transition=""},560)}
   };
   d.addEventListener("touchend",end);d.addEventListener("touchcancel",end);
-  d.addEventListener("click",e=>{if(drag){e.stopPropagation();e.preventDefault();drag=false}},true);
+  d.addEventListener("click",e=>{if(drag){e.stopPropagation();e.preventDefault()}},true);
 });
 const dayDlg=document.getElementById("dayDlg");
 let dayIdx=0;
@@ -1140,19 +1138,9 @@ function renderMonth(){
 const REDUCED=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
 let busy=false;
 function animate(dir,update){
-  const pane=document.getElementById("pane");
-  const done=()=>{pane.style.transition="";pane.style.transform="";pane.style.opacity=""};
-  if(REDUCED()){update();done();return}
-  if(document.startViewTransition){
-    if(busy){update();done();return}
-    busy=true;
-    document.documentElement.dataset.dir=dir>0?"next":dir<0?"prev":"none";
-    const vt=document.startViewTransition(()=>{update();done();window.scrollTo(0,0)});
-    vt.finished.finally(()=>{busy=false});
-    return;
-  }
-  update();done();window.scrollTo(0,0);
-  if(dir){pane.classList.remove("slide-next","slide-prev");void pane.offsetWidth;pane.classList.add(dir>0?"slide-next":"slide-prev")}
+  update();window.scrollTo(0,0);
+  if(REDUCED())return;
+  const p=panelOf(mode);if(p)p.animate([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:320,easing:"cubic-bezier(.25,.8,.3,1)"});
 }
 function go(dir){
   if(mode!=="week"&&mode!=="month")return;
