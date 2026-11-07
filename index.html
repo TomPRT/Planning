@@ -242,7 +242,7 @@ html[data-dir="none"]::view-transition-new(content){animation-name:vtFadeUp}
 @keyframes vtTxtIn{from{opacity:0;transform:translateY(8px)}}
 
 /* Feuilles qui montent et descendent */
-dialog[open]{animation:sheetUp .55s var(--spring)}
+dialog[open]:not(.closing){animation:sheetUp .45s cubic-bezier(.22,.9,.3,1)}
 dialog[open]::backdrop{animation:fadeIn .3s ease}
 dialog.closing{animation:sheetDown .21s cubic-bezier(.4,0,.8,.4) forwards}
 dialog.closing::backdrop{animation:fadeOut .21s ease forwards}
@@ -541,10 +541,9 @@ html[data-dir="none"]::view-transition-new(content){animation:.5s var(--spring-s
 .sess.just .tc-title,.sess.just .title{transition:color .4s}
 
 /* Feuilles : verre dépoli et glissement */
-dialog{will-change:transform;touch-action:pan-y}
-dialog::backdrop{background:rgba(8,13,25,.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+dialog{touch-action:pan-y}
+dialog::backdrop{background:rgba(8,13,25,.45)}
 @supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
-  dialog{background:color-mix(in srgb,var(--surface) 88%,transparent);-webkit-backdrop-filter:blur(28px) saturate(1.8);backdrop-filter:blur(28px) saturate(1.8)}
   .save-state{background:color-mix(in srgb,var(--hero) 82%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6)}
 }
 dialog.closing::backdrop{animation:fadeOut .26s ease forwards}
@@ -562,7 +561,9 @@ body.launch .ring .pg{transition-delay:.35s}
 .pager.locked{overflow-x:hidden;scroll-snap-type:none}
 .panel{flex:0 0 100%;min-width:0;padding:0 14px;scroll-snap-align:start;scroll-snap-stop:always;box-sizing:border-box}
 .tab-ind{transition:transform .45s var(--spring-soft)}
-.panel:not(.active) :is(.badge,.badge .coin,.b-bar i,.tile,.chart .bar,.split i,.lvl){animation:none!important}
+.panel :is(.badge,.badge .coin,.tile){animation:none!important}
+.panel:not(.inview) .b-bar i{animation:none!important;transform:scaleX(0)}
+.panel:not(.inview) .chart .bar{animation:none!important;transform:scaleY(0)}
 /* ===== Version compacte : tout tient sur un écran ===== */
 .hero{padding:10px 18px 12px}
 header{margin-bottom:10px}
@@ -830,7 +831,7 @@ const panelOf=t=>document.querySelector('.panel[data-t="'+(t==="tpl"?"week":t)+'
 function snapHero(){return{range:document.getElementById("range").textContent,sub:document.getElementById("sub").textContent,sum:document.getElementById("summary").innerHTML,gold:document.querySelector(".hero").classList.contains("gold")}}
 let lastPagerKey=null;
 function finishLayout(){
-  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p===panelOf(mode)));
+  document.querySelectorAll(".panel").forEach(p=>{const on=p===panelOf(mode);p.classList.toggle("active",on);if(on)p.classList.add("inview");else if(!scrolling)p.classList.remove("inview")});
   const i=Math.max(0,TABS.indexOf(mode==="tpl"?"week":mode)),w=pager.clientWidth;
   if(!scrolling&&w&&Math.round(pager.scrollLeft/w)!==i)pager.scrollLeft=i*w;
   const ind=document.querySelector(".tab-ind");ind.style.transform="translateX("+i*100+"%)";
@@ -864,7 +865,7 @@ pager.addEventListener("scroll",()=>{
   const w=pager.clientWidth,pos=pager.scrollLeft/w;
   const ind=document.querySelector(".tab-ind");ind.style.transition="none";ind.style.transform="translateX("+pos*100+"%)";
   const near=Math.round(pos);
-  if(near!==pressedIdx){pressedIdx=near;document.querySelectorAll(".tabs button").forEach((b,k)=>b.setAttribute("aria-pressed",k===near))}
+  if(near!==pressedIdx){pressedIdx=near;document.querySelectorAll(".tabs button").forEach((b,k)=>b.setAttribute("aria-pressed",k===near));const tp=panelOf(TABS[near]);if(tp)tp.classList.add("inview")}
   clearTimeout(scrollT);scrollT=setTimeout(settle,110);
 },{passive:true});
 pager.addEventListener("scrollend",()=>{clearTimeout(scrollT);settle()});
