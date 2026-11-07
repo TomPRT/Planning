@@ -618,6 +618,11 @@ header{margin-bottom:10px}
 .icon-btn.due::after{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--run);box-shadow:0 0 0 2px var(--hero)}
 .pager{margin-bottom:24px}
 html,body{overscroll-behavior-y:none}
+/* Calendrier : une seule teinte par type */
+.cell.heat{background:color-mix(in srgb,var(--run) 30%,var(--surface))}
+.cell.heat .n{color:var(--ink)}
+.cell.heat.today .n{color:var(--run)}
+.sw.runs{background:color-mix(in srgb,var(--run) 30%,var(--surface))}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -1096,7 +1101,7 @@ function renderMonth(){
   const mp=total>0&&done===total;
   st.innerHTML=`${mp?'<span class="gold-txt"><b>★ Mois parfait</b></span>':`<span><b>${done}/${total}</b> séances faites</span>`}<span><b data-n="${Math.round(km*10)/10}" data-k="mkm">${fmtN(km)}</b> km courus</span>`;
   const lg=el("div",{class:"legend"});
-  lg.innerHTML=`<span class="scale">Moins<i class="sw h1"></i><i class="sw h2"></i><i class="sw h3"></i><i class="sw h4"></i>Plus</span><span><i class="sw rfs"></i>Renfo</span><span><span class="star-l">★</span>Parfaite</span>`;
+  lg.innerHTML=`<span><i class="sw runs"></i>Course</span><span><i class="sw rfs"></i>Renfo</span><span><span class="star-l">★</span>Parfaite</span>`;
   const mt=el("div",{class:"track month"+(mp?" perfect":""),"aria-hidden":"true"});
   for(let w=mondayOf(first);w<=last;w.setDate(w.getDate()+7)){
     let a=0,b=0;
@@ -1123,7 +1128,7 @@ function renderMonth(){
     const cell=el("button",{class:"cell"+(day.getMonth()!==m?" out":"")+(isToday?" today":"")+(perfect?" perfect":""),"aria-label":label+(perfect?", semaine parfaite":""),onclick:()=>{weekOffset=Math.round((mondayOf(day)-thisMon)/(7*864e5));render();switchTab("week")}});
     cell.append(el("span",{class:"n"},String(day.getDate())));
     const kmD=list.filter(s=>s.done&&s.type==="run").reduce((a,s)=>a+kmOf(s),0),rfD=list.some(s=>s.done&&s.type==="renfo");
-    if(kmD>0){const lv=kmD<5?1:kmD<8?2:kmD<12?3:4;cell.classList.add("heat","h"+lv)}else if(rfD)cell.classList.add("rf");
+    if(kmD>0)cell.classList.add("heat");else if(rfD)cell.classList.add("rf");
     if(kmD>0&&rfD)cell.classList.add("both");
     const dots=el("span",{class:"dots","aria-hidden":"true"});
     list.filter(s=>!s.done).forEach(s=>dots.append(el("i",{class:"mini "+s.type+(past?" miss":"")})));
