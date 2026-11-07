@@ -619,10 +619,12 @@ header{margin-bottom:10px}
 .pager{margin-bottom:24px}
 html,body{overscroll-behavior-y:none}
 /* Calendrier : une seule teinte par type */
-.cell.heat{background:color-mix(in srgb,var(--run) 30%,var(--surface))}
+.cell.heat{background:color-mix(in srgb,var(--run) 55%,var(--surface))}
 .cell.heat .n{color:var(--ink)}
 .cell.heat.today .n{color:var(--run)}
-.sw.runs{background:color-mix(in srgb,var(--run) 30%,var(--surface))}
+.sw.runs{background:color-mix(in srgb,var(--run) 55%,var(--surface))}
+.cell.rf,.sw.rfs{background:color-mix(in srgb,var(--renfo) 50%,var(--surface))}
+.cell.heat.today .n{color:var(--ink)}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
