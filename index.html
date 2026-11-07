@@ -612,6 +612,12 @@ header{margin-bottom:10px}
 .gear{padding:6px 10px}
 [data-r="footer"]{margin-top:2px}
 .link{padding:6px 0}
+/* Réglages fixes en haut à droite */
+.hdr-r{display:flex;align-items:center;gap:8px;flex:none}
+.icon-btn.set{position:relative}
+.icon-btn.set svg{display:block}
+.icon-btn.due::after{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--run);box-shadow:0 0 0 2px var(--hero)}
+.pager{margin-bottom:24px}
 @media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -624,11 +630,14 @@ header{margin-bottom:10px}
       <h1 class="range" id="range">…</h1>
       <p class="sub" id="sub"></p>
     </div>
-    <div class="nav" id="nav">
-      <button class="icon-btn" id="prev" aria-label="Semaine précédente">‹</button>
-      <button class="icon-btn" id="next" aria-label="Semaine suivante">›</button>
+    <div class="hdr-r">
+      <div class="nav" id="nav">
+        <button class="icon-btn" id="prev" aria-label="Semaine précédente">‹</button>
+        <button class="icon-btn" id="next" aria-label="Semaine suivante">›</button>
+      </div>
+      <button class="icon-btn set" id="setBtn" aria-label="Réglages"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button class="icon-btn" id="closeTpl" aria-label="Fermer la semaine type" hidden>✕</button>
     </div>
-    <button class="icon-btn" id="closeTpl" aria-label="Fermer la semaine type" hidden>✕</button>
   </header>
   <div id="summary"></div>
   </div>
@@ -648,7 +657,6 @@ header{margin-bottom:10px}
     <section class="panel" data-t="stats"><div data-r="days"></div><div data-r="footer"></div></section>
     <section class="panel" data-t="badges"><div data-r="days"></div><div data-r="footer"></div></section>
   </div>
-  <div class="settings"><button class="gear" id="setBtn"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Réglages</span></button></div>
 </div>
 <div class="save-state" id="saveState">Enregistré</div>
 
@@ -1063,7 +1071,7 @@ function updateTabs(){
   document.querySelector(".tabs").hidden=tpl;
   document.getElementById("nav").hidden=tpl||mode==="badges"||mode==="stats";
   document.getElementById("closeTpl").hidden=!tpl;
-  document.querySelector(".settings").hidden=tpl;
+  document.getElementById("setBtn").hidden=tpl;
   document.querySelector(".tabs").nextElementSibling.style.marginTop=tpl?"14px":"";
   document.getElementById("prev").setAttribute("aria-label",mode==="month"?"Mois précédent":"Semaine précédente");
   document.getElementById("next").setAttribute("aria-label",mode==="month"?"Mois suivant":"Semaine suivante");
